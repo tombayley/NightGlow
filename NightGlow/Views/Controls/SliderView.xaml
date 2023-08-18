@@ -1,0 +1,76 @@
+﻿<UserControl
+    x:Class="NightGlow.Views.Controls.SliderView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:local="clr-namespace:NightGlow.Views.Controls" 
+    mc:Ignorable="d"
+    >
+
+    <DockPanel>
+
+        <Button
+            Style="{StaticResource MaterialDesignIconButton}"
+            DockPanel.Dock="Right"
+            Width="28"
+            Height="28"
+            Click="Plus_Click"
+            >
+            <materialDesign:PackIcon
+                Kind="Plus"
+                Width="16"
+                Height="16"
+                />
+        </Button>
+
+        <TextBox
+            Text="{Binding SliderValue, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SliderView}}}"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Right"
+            DockPanel.Dock="Right"
+            Width="32"
+            TextAlignment="Center"
+            PreviewTextInput="PreviewTextInput"
+            TextChanged="Text_TextChanged"
+            />
+
+        <Button
+            Style="{StaticResource MaterialDesignIconButton}"
+            DockPanel.Dock="Right"
+            Width="28"
+            Height="28"
+            Click="Minus_Click"
+            >
+            <materialDesign:PackIcon
+                Kind="Minus"
+                Width="16"
+                Height="16"
+                />
+        </Button>
+
+        <Slider
+            Width="150"
+            DockPanel.Dock="Right"
+            VerticalAlignment="Center"
+            SmallChange="1"
+            LargeChange="5"
+            Margin="8,0,8,0"
+            Value="{Binding SliderValue, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SliderView}}}"
+            Minimum="{Binding ValueMin, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SliderView}}}"
+            Maximum="{Binding ValueMax, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SliderView}}}"
+            TickFrequency="{Binding ValueStep, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SliderView}}}"
+            IsSnapToTickEnabled="True"
+            TickPlacement="BottomRight"
+            />
+
+        <TextBlock
+            Text="{Binding Title, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SliderView}}}"
+            VerticalAlignment="Center"
+            TextWrapping="Wrap"
+            Margin="0,0,12,0"
+            />
+
+    </DockPanel>
+</UserControl>

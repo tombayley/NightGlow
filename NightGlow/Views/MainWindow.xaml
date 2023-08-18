@@ -1,0 +1,117 @@
+﻿<Window
+    x:Class="NightGlow.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:views="clr-namespace:NightGlow.Views"
+    mc:Ignorable="d"
+    Title="{StaticResource AppName}"
+    Height="500"
+    Width="550"
+    MinHeight="350"
+    MinWidth="500"
+    Background="{DynamicResource MaterialDesignPaper}"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextElement.FontWeight="Medium"
+    TextElement.FontSize="14"
+    FontFamily="{materialDesign:MaterialDesignFont}"
+    Icon="/Assets/app-icon.ico"
+    WindowStartupLocation="CenterScreen"
+    >
+
+    <TabControl
+        materialDesign:ColorZoneAssist.Mode="PrimaryMid"
+        Style="{StaticResource MaterialDesignNavigationRailTabControl}"
+        TabStripPlacement="Left"
+        SelectedIndex="{Binding SelectedTabIndex}"
+        >
+        
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel
+                    Width="auto"
+                    Height="auto">
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        HorizontalAlignment="Center"
+                        Kind="Home" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Text="Home" />
+                </StackPanel>
+            </TabItem.Header>
+            
+            <views:HomeView
+                />
+
+        </TabItem>
+
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel
+                    Width="auto"
+                    Height="auto">
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        HorizontalAlignment="Center"
+                        Kind="Cog" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Text="General" />
+                </StackPanel>
+            </TabItem.Header>
+
+            <views:SettingsGeneralView
+                />
+
+        </TabItem>
+
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel
+                    Width="auto"
+                    Height="auto">
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        HorizontalAlignment="Center"
+                        Kind="Keyboard" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Text="Hotkeys" />
+                </StackPanel>
+            </TabItem.Header>
+
+            <views:SettingsHotkeysView
+                />
+
+        </TabItem>
+            
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel
+                    Width="auto"
+                    Height="auto">
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        HorizontalAlignment="Center"
+                        Kind="Tune" />    
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Text="Limits" />
+                </StackPanel>
+            </TabItem.Header>
+            
+            <views:SettingsLimitsView
+                />
+
+        </TabItem>
+
+    </TabControl>
+
+</Window>
