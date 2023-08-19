@@ -28,9 +28,10 @@ The app is built and released automatically from source using GitHub Actions [he
 ## Features
 - [x] Customizable hotkeys for brightness ↑/↓, temperature ↑/↓, brightness & temperature ↑/↓
 - [x] Custom brightness & temperature min/max/step values
-- [] Option to show a small popup when the brightness/temperature is changed
-- [] Smooth transition between brightness/temperature levels
-- [] Day/night modes for automatic transition at sunrise/sunset
+- [x] Low resource usage
+- [ ] Option to show a small popup when the brightness/temperature is changed
+- [ ] Smooth transition between brightness/temperature levels
+- [ ] Day/night modes for automatic transition at sunrise/sunset
 
 
 ## Screenshots
