@@ -34,3 +34,9 @@ The app is built and released automatically from source using GitHub Actions [he
 
 
 ## Screenshots
+<p align="center">
+    <img align="center" src="res/home.png" style="box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);" />
+    <img align="center" src="res/settings.png" style="box-shadow: 0 0 40px rgba(0, 0, 0, 0.5); margin-top: 40px;" />
+    <img align="center" src="res/hotkeys.png" style="box-shadow: 0 0 40px rgba(0, 0, 0, 0.5); margin-top: 40px;" />
+    <img align="center" src="res/limits.png" style="box-shadow: 0 0 40px rgba(0, 0, 0, 0.5); margin-top: 40px;" />
+</p>
