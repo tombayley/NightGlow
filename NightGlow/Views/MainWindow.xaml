@@ -20,14 +20,14 @@
     Icon="/Assets/app-icon.ico"
     WindowStartupLocation="CenterScreen"
     >
-
+    
     <TabControl
-        materialDesign:ColorZoneAssist.Mode="PrimaryMid"
+        materialDesign:ColorZoneAssist.Mode="Standard"
         Style="{StaticResource MaterialDesignNavigationRailTabControl}"
         TabStripPlacement="Left"
         SelectedIndex="{Binding SelectedTabIndex}"
+        Background="{DynamicResource DarkBackgroundColor}"
         >
-        
         <TabItem>
             <TabItem.Header>
                 <StackPanel
@@ -45,6 +45,7 @@
             </TabItem.Header>
             
             <views:HomeView
+                Background="{DynamicResource MaterialDesignPaper}"
                 />
 
         </TabItem>
@@ -66,6 +67,7 @@
             </TabItem.Header>
 
             <views:SettingsGeneralView
+                Background="{DynamicResource MaterialDesignPaper}"
                 />
 
         </TabItem>
@@ -87,6 +89,7 @@
             </TabItem.Header>
 
             <views:SettingsHotkeysView
+                Background="{DynamicResource MaterialDesignPaper}"
                 />
 
         </TabItem>
@@ -106,8 +109,9 @@
                         Text="Limits" />
                 </StackPanel>
             </TabItem.Header>
-            
+
             <views:SettingsLimitsView
+                Background="{DynamicResource MaterialDesignPaper}"
                 />
 
         </TabItem>

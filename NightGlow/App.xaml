@@ -15,9 +15,10 @@
             <Color x:Key="PrimaryLightColor">#fff0b8</Color>
             <Color x:Key="PrimaryDarkColor">#ba9c2d</Color>
             <Color x:Key="AccentColor">#1e4063</Color>
-            <Color x:Key="AccentDarkColor">#0c2845</Color>
             <Color x:Key="TextColor">#000000</Color>
             <Color x:Key="InverseTextColor">#000000</Color>
+
+            <SolidColorBrush x:Key="DarkBackgroundColor" Color="#242424" />
 
             <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{DynamicResource PrimaryLightColor}" />
             <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="{DynamicResource InverseTextColor}" />
