@@ -9,5 +9,9 @@ public partial class MainWindow : Window
     {
         DataContext = viewModel;
         InitializeComponent();
+
+        Loaded += viewModel.OnWindowLoaded;
+        Closing += viewModel.OnWindowClosing;
     }
+
 }

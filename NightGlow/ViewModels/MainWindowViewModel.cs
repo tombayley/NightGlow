@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using NightGlow.Services;
+using System.ComponentModel;
+using System.Windows;
 
 namespace NightGlow.ViewModels;
 
@@ -21,7 +23,6 @@ public class MainWindowViewModel : ObservableObject
         {
             if (_selectedTabIndex == value) return;
 
-            // The Hotkey tab
             // Disable global hotkeys so they dont interfere with setting new hotkeys
             if (value == 2)
                 // Entered hotkey tab
@@ -40,4 +41,17 @@ public class MainWindowViewModel : ObservableObject
         _settingsService = settingsService;
         _nightGlowService = nightGlowService;
     }
+
+    public void OnWindowLoaded(object sender, RoutedEventArgs e)
+    {
+        if (SelectedTabIndex == 2)
+            _nightGlowService.UnregisterHotKeys();
+    }
+
+    public void OnWindowClosing(object sender, CancelEventArgs e)
+    {
+        if (SelectedTabIndex == 2)
+            _nightGlowService.RegisterHotKeys();
+    }
+
 }
