@@ -1,0 +1,32 @@
+﻿<UserControl
+    x:Class="NightGlow.Views.Controls.HotKeyView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:NightGlow.Views.Controls"
+    xmlns:uc="clr-namespace:NightGlow.Views.Controls"
+    mc:Ignorable="d" 
+    >
+
+    <DockPanel>
+        
+        <uc:HotKeyTextBox
+            DockPanel.Dock="Right"
+            Style="{StaticResource MaterialDesignTextBox}"
+            Width="150"
+            Padding="4"
+            HorizontalContentAlignment="Center"
+            HotKey="{Binding HotKey, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:HotKeyView}}}"
+            />
+
+        <TextBlock
+            Text="{Binding Title, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:HotKeyView}}}"
+            VerticalAlignment="Center"
+            TextWrapping="Wrap"
+            Margin="0,0,12,0"
+            />
+        
+    </DockPanel>
+
+</UserControl>

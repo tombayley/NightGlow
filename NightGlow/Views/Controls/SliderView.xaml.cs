@@ -6,7 +6,7 @@ namespace NightGlow.Views.Controls;
 public partial class SliderView : UserControl
 {
 
-    public static readonly DependencyProperty SliderValueProperty = DependencyProperty.Register("SliderValue", typeof(double), typeof(SliderView), null);
+    public static readonly DependencyProperty SliderValueProperty = DependencyProperty.Register(nameof(SliderValue), typeof(double), typeof(SliderView), null);
 
     public double SliderValue
     {

@@ -31,39 +31,15 @@
                         Text="Brightness"
                         />
 
-                    <DockPanel>
-                        <uc:HotKeyTextBox
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource MaterialDesignTextBox}"
-                            Width="150"
-                            Padding="4"
-                            HorizontalContentAlignment="Center"
-                            HotKey="{Binding SettingsService.HotKeyBrightnessInc, Mode=TwoWay}"
-                            />
-                        <TextBlock
-                            Text="Increase"
-                            VerticalAlignment="Center"
-                            TextWrapping="Wrap"
-                            Margin="0,0,12,0"
-                            />
-                    </DockPanel>
+                    <uc:HotKeyView
+                        Title="Increase"
+                        HotKey="{Binding SettingsService.HotKeyBrightnessInc, Mode=TwoWay}"
+                        />
 
-                    <DockPanel>
-                        <uc:HotKeyTextBox
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource MaterialDesignTextBox}"
-                            Width="150"
-                            Padding="4"
-                            HorizontalContentAlignment="Center"
-                            HotKey="{Binding SettingsService.HotKeyBrightnessDec, Mode=TwoWay}"
-                            />
-                        <TextBlock
-                            Text="Decrease"
-                            VerticalAlignment="Center"
-                            TextWrapping="Wrap"
-                            Margin="0,0,12,0"
-                            />
-                    </DockPanel>
+                    <uc:HotKeyView
+                        Title="Decrease"
+                        HotKey="{Binding SettingsService.HotKeyBrightnessDec, Mode=TwoWay}"
+                        />
 
                 </StackPanel>
             </materialDesign:Card>
@@ -78,39 +54,15 @@
                         Text="Temperature"
                         />
 
-                    <DockPanel>
-                        <uc:HotKeyTextBox
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource MaterialDesignTextBox}"
-                            Width="150"
-                            Padding="4"
-                            HorizontalContentAlignment="Center"
-                            HotKey="{Binding SettingsService.HotKeyTemperatureInc, Mode=TwoWay}"
-                            />
-                        <TextBlock
-                            Text="Increase"
-                            VerticalAlignment="Center"
-                            TextWrapping="Wrap"
-                            Margin="0,0,12,0"
-                            />
-                    </DockPanel>
+                    <uc:HotKeyView
+                        Title="Increase"
+                        HotKey="{Binding SettingsService.HotKeyTemperatureInc, Mode=TwoWay}"
+                        />
 
-                    <DockPanel>
-                        <uc:HotKeyTextBox
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource MaterialDesignTextBox}"
-                            Width="150"
-                            Padding="4"
-                            HorizontalContentAlignment="Center"
-                            HotKey="{Binding SettingsService.HotKeyTemperatureDec, Mode=TwoWay}"
-                            />
-                        <TextBlock
-                            Text="Decrease"
-                            VerticalAlignment="Center"
-                            TextWrapping="Wrap"
-                            Margin="0,0,12,0"
-                            />
-                    </DockPanel>
+                    <uc:HotKeyView
+                        Title="Decrease"
+                        HotKey="{Binding SettingsService.HotKeyTemperatureDec, Mode=TwoWay}"
+                        />
 
                 </StackPanel>
             </materialDesign:Card>
@@ -125,39 +77,15 @@
                         Text="Brightness &amp; Temperature"
                         />
 
-                    <DockPanel>
-                        <uc:HotKeyTextBox
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource MaterialDesignTextBox}"
-                            Width="150"
-                            Padding="4"
-                            HorizontalContentAlignment="Center"
-                            HotKey="{Binding SettingsService.HotKeyBrightTempInc, Mode=TwoWay}"
-                            />
-                        <TextBlock
-                            Text="Increase"
-                            VerticalAlignment="Center"
-                            TextWrapping="Wrap"
-                            Margin="0,0,12,0"
-                            />
-                    </DockPanel>
+                    <uc:HotKeyView
+                        Title="Increase"
+                        HotKey="{Binding SettingsService.HotKeyBrightTempInc, Mode=TwoWay}"
+                        />
 
-                    <DockPanel>
-                        <uc:HotKeyTextBox
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource MaterialDesignTextBox}"
-                            Width="150"
-                            Padding="4"
-                            HorizontalContentAlignment="Center"
-                            HotKey="{Binding SettingsService.HotKeyBrightTempDec, Mode=TwoWay}"
-                            />
-                        <TextBlock
-                            Text="Decrease"
-                            VerticalAlignment="Center"
-                            TextWrapping="Wrap"
-                            Margin="0,0,12,0"
-                            />
-                    </DockPanel>
+                    <uc:HotKeyView
+                        Title="Decrease"
+                        HotKey="{Binding SettingsService.HotKeyBrightTempDec, Mode=TwoWay}"
+                        />
 
                 </StackPanel>
             </materialDesign:Card>
