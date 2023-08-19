@@ -36,7 +36,7 @@
                             DockPanel.Dock="Right"
                             Style="{StaticResource MaterialDesignTextBox}"
                             Width="150"
-                            Padding="6"
+                            Padding="4"
                             HorizontalContentAlignment="Center"
                             HotKey="{Binding SettingsService.HotKeyBrightnessInc, Mode=TwoWay}"
                             />
@@ -53,7 +53,7 @@
                             DockPanel.Dock="Right"
                             Style="{StaticResource MaterialDesignTextBox}"
                             Width="150"
-                            Padding="6"
+                            Padding="4"
                             HorizontalContentAlignment="Center"
                             HotKey="{Binding SettingsService.HotKeyBrightnessDec, Mode=TwoWay}"
                             />
@@ -83,7 +83,7 @@
                             DockPanel.Dock="Right"
                             Style="{StaticResource MaterialDesignTextBox}"
                             Width="150"
-                            Padding="6"
+                            Padding="4"
                             HorizontalContentAlignment="Center"
                             HotKey="{Binding SettingsService.HotKeyTemperatureInc, Mode=TwoWay}"
                             />
@@ -100,7 +100,7 @@
                             DockPanel.Dock="Right"
                             Style="{StaticResource MaterialDesignTextBox}"
                             Width="150"
-                            Padding="6"
+                            Padding="4"
                             HorizontalContentAlignment="Center"
                             HotKey="{Binding SettingsService.HotKeyTemperatureDec, Mode=TwoWay}"
                             />
@@ -130,7 +130,7 @@
                             DockPanel.Dock="Right"
                             Style="{StaticResource MaterialDesignTextBox}"
                             Width="150"
-                            Padding="6"
+                            Padding="4"
                             HorizontalContentAlignment="Center"
                             HotKey="{Binding SettingsService.HotKeyBrightTempInc, Mode=TwoWay}"
                             />
@@ -147,7 +147,7 @@
                             DockPanel.Dock="Right"
                             Style="{StaticResource MaterialDesignTextBox}"
                             Width="150"
-                            Padding="6"
+                            Padding="4"
                             HorizontalContentAlignment="Center"
                             HotKey="{Binding SettingsService.HotKeyBrightTempDec, Mode=TwoWay}"
                             />

@@ -6,11 +6,11 @@ namespace NightGlow.Views.Controls;
 public partial class SliderView : UserControl
 {
 
-    public static readonly DependencyProperty SliderValueProperty = DependencyProperty.Register("SliderValue", typeof(int), typeof(SliderView), null);
+    public static readonly DependencyProperty SliderValueProperty = DependencyProperty.Register("SliderValue", typeof(double), typeof(SliderView), null);
 
-    public int SliderValue
+    public double SliderValue
     {
-        get { return (int)GetValue(SliderValueProperty); }
+        get => (double)GetValue(SliderValueProperty);
         set
         {
             value = ValidateSliderValue(value);
@@ -18,11 +18,11 @@ public partial class SliderView : UserControl
         }
     }
 
-    public int ValueMin { get; set; }
+    public double ValueMin { get; set; }
 
-    public int ValueMax { get; set; }
+    public double ValueMax { get; set; }
 
-    public int ValueStep { get; set; }
+    public double ValueStep { get; set; }
 
     public string Title { get; set; }
 
@@ -31,7 +31,7 @@ public partial class SliderView : UserControl
         InitializeComponent();
     }
 
-    private int ValidateSliderValue(int value)
+    private double ValidateSliderValue(double value)
     {
         if (value < ValueMin) return ValueMin;
         else if (value > ValueMax) return ValueMax;
@@ -50,7 +50,7 @@ public partial class SliderView : UserControl
 
     private void PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
     {
-        e.Handled = !int.TryParse(e.Text, out _);
+        e.Handled = !double.TryParse(e.Text, out _);
     }
 
     private void Text_TextChanged(object sender, TextChangedEventArgs e)
@@ -58,7 +58,7 @@ public partial class SliderView : UserControl
         if (sender is not TextBox textBox) return;
         if (string.IsNullOrEmpty(textBox.Text)) return;
 
-        if (!int.TryParse(textBox.Text, out int value)) value = ValueMax;
+        if (!double.TryParse(textBox.Text, out double value)) value = ValueMax;
 
         textBox.Text = ValidateSliderValue(value).ToString();
     }

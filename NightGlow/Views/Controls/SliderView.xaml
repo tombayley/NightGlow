@@ -26,7 +26,7 @@
         </Button>
 
         <TextBox
-            Text="{Binding SliderValue, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SliderView}}}"
+            Text="{Binding SliderValue, StringFormat={}{0:F2}, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SliderView}}}"
             VerticalAlignment="Center"
             HorizontalAlignment="Right"
             DockPanel.Dock="Right"
@@ -54,8 +54,6 @@
             Width="150"
             DockPanel.Dock="Right"
             VerticalAlignment="Center"
-            SmallChange="1"
-            LargeChange="5"
             Margin="8,0,8,0"
             Value="{Binding SliderValue, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SliderView}}}"
             Minimum="{Binding ValueMin, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SliderView}}}"

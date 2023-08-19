@@ -6,30 +6,159 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:nightGlow="clr-namespace:NightGlow"
     xmlns:local="clr-namespace:NightGlow.Views"
-    mc:Ignorable="d" 
-    Width="400"
-    Height="400"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    mc:Ignorable="d"
     >
-    <StackPanel
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
+
+    <DockPanel
+        Margin="{StaticResource WindowViewMargin}"
         >
 
-        <TextBlock>
-            <Run Text="Brightness" />
-            <Run Text="{Binding NightGlowService.Brightness}" />
-        </TextBlock>
+        <StackPanel
+            Orientation="Horizontal"
+            HorizontalAlignment="Center"
+            Margin="0,0,0,16"
+            DockPanel.Dock="Top"
+            >
 
-        <TextBlock>
-            <Run Text="Temperature" />
-            <Run Text="{Binding NightGlowService.Temperature}" />
-        </TextBlock>
+            <Image
+                Source="/Assets/app-icon.png"
+                Height="40"
+                Width="40"
+                />
+
+            <TextBlock
+                Text="{StaticResource AppName}"
+                VerticalAlignment="Center"
+                TextAlignment="Center"
+                FontSize="20"
+                Margin="16,0,0,0"
+                />
+
+        </StackPanel>
+
+        <Grid
+            DockPanel.Dock="Top"
+            >
+            <Grid.Resources >
+                <Style TargetType="materialDesign:Card" >
+                    <Setter Property="Margin" Value="0,100" />
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <materialDesign:Card
+                Grid.Column="0"
+                Style="{StaticResource ContentCard}"
+                >
+                <StackPanel>
+
+                    <Grid
+                        Margin="0,0,0,12"
+                        >
+                        <TextBlock
+                            Style="{StaticResource TitleTextBlock}"
+                            Text="Brightness"
+                            TextAlignment="Center"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            />
+
+                        <TextBlock
+                            Text="{Binding NightGlowService.Brightness, StringFormat={}{0:F2}}"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            />
+                    </Grid>
+
+                    <Slider
+                        Value="{Binding NightGlowService.Brightness}"
+                        Minimum="{Binding SettingsService.BrightnessMin}"
+                        Maximum="{Binding SettingsService.BrightnessMax}"
+                        TickFrequency="{Binding SettingsService.BrightnessStep}"
+                        IsSnapToTickEnabled="True"
+                        TickPlacement="BottomRight"
+                        />
+
+                    <DockPanel LastChildFill="False">
+                        <TextBlock
+                            Style="{StaticResource SliderLimitPreview}"
+                            Text="{Binding SettingsService.BrightnessMin, StringFormat={}{0:F2}}"
+                            DockPanel.Dock="Left"
+                            />
+                        <TextBlock
+                            Style="{StaticResource SliderLimitPreview}"
+                            Text="{Binding SettingsService.BrightnessMax, StringFormat={}{0:F2}}"
+                            DockPanel.Dock="Right"
+                            />
+                    </DockPanel>
+
+                </StackPanel>
+            </materialDesign:Card>
+
+            <Border Grid.Column="1" Background="Transparent" />
+
+            <materialDesign:Card
+                Grid.Column="2"
+                Style="{StaticResource ContentCard}"
+                >
+                <StackPanel>
+
+                    <Grid
+                        Margin="0,0,0,12"
+                        >
+                        <TextBlock
+                            Style="{StaticResource TitleTextBlock}"
+                            Text="Temperature"
+                            TextAlignment="Center"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            />
+
+                        <TextBlock
+                            Text="{Binding NightGlowService.Temperature}"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            />
+                    </Grid>
+
+
+                    <Slider
+                        Value="{Binding NightGlowService.Temperature}"
+                        Minimum="{Binding SettingsService.TemperatureMin}"
+                        Maximum="{Binding SettingsService.TemperatureMax}"
+                        TickFrequency="{Binding SettingsService.TemperatureStep}"
+                        IsSnapToTickEnabled="True"
+                        TickPlacement="BottomRight"
+                        />
+
+                    <DockPanel LastChildFill="False">
+                        <TextBlock
+                            Style="{StaticResource SliderLimitPreview}"
+                            Text="{Binding SettingsService.TemperatureMin}"
+                            DockPanel.Dock="Left"
+                            />
+                        <TextBlock
+                            Style="{StaticResource SliderLimitPreview}"
+                            Text="{Binding SettingsService.TemperatureMax}"
+                            DockPanel.Dock="Right"
+                            />
+                    </DockPanel>
+
+                </StackPanel>
+            </materialDesign:Card>
+        </Grid>
 
         <Button
+            DockPanel.Dock="Bottom"
             Click="ButtonVersion_OnClick"
             Style="{StaticResource MaterialDesignFlatButton}"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
             >
             <TextBlock
                 FontSize="12"
@@ -41,6 +170,6 @@
             </TextBlock>
         </Button>
 
-    </StackPanel>
+    </DockPanel>
 
 </UserControl>

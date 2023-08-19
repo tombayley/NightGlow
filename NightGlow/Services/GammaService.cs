@@ -138,11 +138,7 @@ public partial class GammaService : IDisposable
     {
         // Avoid unnecessary changes as updating too often will cause stutters
         if (!IsGammaStale() && !IsSignificantChange(configuration))
-        {
-            Debug.WriteLine(IsGammaStale());
-            Debug.WriteLine(IsSignificantChange(configuration));
             return;
-        }
 
         EnsureValidDeviceContexts();
 

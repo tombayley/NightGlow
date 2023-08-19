@@ -28,6 +28,12 @@
             <SolidColorBrush x:Key="SecondaryHueMidBrush" Color="{DynamicResource AccentColor}" />
             <SolidColorBrush x:Key="SecondaryHueMidForegroundBrush" Color="{DynamicResource TextColor}" />
 
+            <Style x:Key="SliderLimitPreview" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                <Setter Property="Margin" Value="0,8,0,0" />
+            </Style>
+
             <Style x:Key="TitleTextBlock" TargetType="TextBlock">
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />

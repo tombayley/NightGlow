@@ -30,26 +30,26 @@
 
                     <uc:SliderView
                         Title="Min"
-                        SliderValue="{Binding BrightnessMinInt, Mode=TwoWay}"
-                        ValueMin="5"
-                        ValueMax="100"
-                        ValueStep="5"
+                        SliderValue="{Binding SettingsService.BrightnessMin, Mode=TwoWay}"
+                        ValueMin="0.05"
+                        ValueMax="1"
+                        ValueStep="0.05"
                         />
 
                     <uc:SliderView
                         Title="Max"
-                        SliderValue="{Binding BrightnessMaxInt, Mode=TwoWay}"
-                        ValueMin="10"
-                        ValueMax="100"
-                        ValueStep="5"
+                        SliderValue="{Binding SettingsService.BrightnessMax, Mode=TwoWay}"
+                        ValueMin="0.1"
+                        ValueMax="1"
+                        ValueStep="0.05"
                         />
 
                     <uc:SliderView
                         Title="Step"
-                        SliderValue="{Binding BrightnessStepInt, Mode=TwoWay}"
-                        ValueMin="5"
-                        ValueMax="100"
-                        ValueStep="5"
+                        SliderValue="{Binding SettingsService.BrightnessStep, Mode=TwoWay}"
+                        ValueMin="0.05"
+                        ValueMax="1"
+                        ValueStep="0.05"
                         />
 
                 </StackPanel>

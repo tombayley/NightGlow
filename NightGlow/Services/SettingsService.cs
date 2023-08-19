@@ -51,6 +51,7 @@ public class SettingsService : ObservableObject, IDisposable
         {
             Settings.Default.BrightnessMin = value;
             Settings.Default.Save();
+            OnPropertyChanged(nameof(BrightnessMin));
         }
     }
 
@@ -61,6 +62,7 @@ public class SettingsService : ObservableObject, IDisposable
         {
             Settings.Default.BrightnessMax = value;
             Settings.Default.Save();
+            OnPropertyChanged(nameof(BrightnessMax));
         }
     }
 
@@ -71,6 +73,7 @@ public class SettingsService : ObservableObject, IDisposable
         {
             Settings.Default.BrightnessStep = value;
             Settings.Default.Save();
+            OnPropertyChanged(nameof(BrightnessStep));
         }
     }
 
@@ -81,6 +84,7 @@ public class SettingsService : ObservableObject, IDisposable
         {
             Settings.Default.TemperatureMin = value;
             Settings.Default.Save();
+            OnPropertyChanged(nameof(TemperatureMin));
         }
     }
 
@@ -91,6 +95,7 @@ public class SettingsService : ObservableObject, IDisposable
         {
             Settings.Default.TemperatureMax = value;
             Settings.Default.Save();
+            OnPropertyChanged(nameof(TemperatureMax));
         }
     }
 
@@ -101,6 +106,7 @@ public class SettingsService : ObservableObject, IDisposable
         {
             Settings.Default.TemperatureStep = value;
             Settings.Default.Save();
+            OnPropertyChanged(nameof(TemperatureStep));
         }
     }
 

@@ -8,7 +8,7 @@
     xmlns:views="clr-namespace:NightGlow.Views"
     mc:Ignorable="d"
     Title="{StaticResource AppName}"
-    Height="500"
+    Height="480"
     Width="550"
     MinHeight="350"
     MinWidth="500"

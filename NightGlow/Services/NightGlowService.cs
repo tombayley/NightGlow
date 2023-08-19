@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using NightGlow.Models;
 using System;
+using System.Diagnostics;
 
 namespace NightGlow.Services;
 
@@ -16,13 +17,14 @@ public class NightGlowService : ObservableObject, IDisposable
 
     public double Brightness
     {
-        get => Convert.ToInt32(ColorConfig.Brightness * 100);
-        set => SetConfig((double)value/100, Temperature);
+        get => ColorConfig.Brightness;
+        set => SetBrightness(value);
     }
+
     public int Temperature
     {
         get => ColorConfig.Temperature;
-        set => SetConfig(Brightness, value);
+        set => SetTemperature(value);
     }
 
     public ColorConfiguration ColorConfig { get; set; } = ColorConfiguration.Default;
@@ -81,6 +83,18 @@ public class NightGlowService : ObservableObject, IDisposable
     {
         if (hotKey == HotKey.None) return;
         _hotKeyService.RegisterHotKey(hotKey, callback);
+    }
+
+    public void SetBrightness(double brightness)
+    {
+        Debug.WriteLine(string.Format("SetBrightness {0}", brightness));
+        SetConfig(brightness, ColorConfig.Temperature);
+    }
+
+    public void SetTemperature(int temperature)
+    {
+        Debug.WriteLine(string.Format("SetTemperature {0}", temperature));
+        SetConfig(ColorConfig.Brightness, temperature);
     }
 
     private void SetConfig(double brightness, int temperature)
