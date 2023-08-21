@@ -5,11 +5,14 @@ namespace NightGlow.WindowsApi;
 
 public partial class DeviceContext : NativeResource
 {
+
     private int _gammaChannelOffset;
 
-    public DeviceContext(nint handle)
-        : base(handle)
+    public string DeviceName;
+
+    public DeviceContext(nint handle, string deviceName) : base(handle)
     {
+        DeviceName = deviceName;
     }
 
     private void SetGammaRamp(GammaRamp ramp)
@@ -71,7 +74,7 @@ public partial class DeviceContext
             return null;
         }
 
-        return new DeviceContext(handle);
+        return new DeviceContext(handle, deviceName);
     }
 
     public static IReadOnlyList<DeviceContext> GetAllScreens()

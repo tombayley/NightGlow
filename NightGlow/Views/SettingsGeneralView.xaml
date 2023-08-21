@@ -11,17 +11,19 @@
     <StackPanel
         Margin="{StaticResource WindowViewMargin}"
         >
-        
+
         <CheckBox
-            materialDesign:CheckBoxAssist.CheckBoxSize="30"
+            materialDesign:CheckBoxAssist.CheckBoxSize="20"
             Content="Start with Windows"
             IsChecked="{Binding SettingsService.StartOnBoot, Mode=TwoWay}"
+            Margin="0,0,0,10"
             />
 
         <CheckBox
-            materialDesign:CheckBoxAssist.CheckBoxSize="30"
+            materialDesign:CheckBoxAssist.CheckBoxSize="20"
             Content="Extended gamma range (requires restart of PC)"
             IsChecked="{Binding SettingsService.ExtendedGammaRange, Mode=TwoWay}"
+            Margin="0,0,0,10"
             />
 
     </StackPanel>

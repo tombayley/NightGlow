@@ -1,12 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Newtonsoft.Json;
+using NightGlow.Data;
 using NightGlow.Models;
 using NightGlow.Properties;
 using System;
+using System.Diagnostics;
 
 namespace NightGlow.Services;
 
 public class SettingsService : ObservableObject, IDisposable
 {
+
+    public DdcConfig DdcConfig;
 
     private readonly RegSwitch _startOnBoot = new(
         @"HKCU\Software\Microsoft\Windows\CurrentVersion\Run",
@@ -172,7 +177,28 @@ public class SettingsService : ObservableObject, IDisposable
 
     public SettingsService()
     {
+        LoadDdcConfig();
+    }
 
+    public void LoadDdcConfig()
+    {
+        string ddcConfigJson = Settings.Default.DdcConfigJson;
+        try
+        {
+            DdcConfig = JsonConvert.DeserializeObject<DdcConfig>(ddcConfigJson) ?? new DdcConfig();
+        }
+        catch (JsonSerializationException ex)
+        {
+            Debug.WriteLine(string.Format("An error occurred during app config deserialization: {0}", ex.Message));
+            Debug.WriteLine(ex);
+        }
+    }
+
+    public void SaveDdcConfig()
+    {
+        string ddcConfigJson = JsonConvert.SerializeObject(DdcConfig);
+        Settings.Default.DdcConfigJson = ddcConfigJson;
+        Settings.Default.Save();
     }
 
     public void Dispose()

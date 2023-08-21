@@ -41,6 +41,7 @@ public partial class App : Application
         services.AddSingleton<SettingsService>();
         services.AddSingleton<HotKeyService>();
         services.AddSingleton<GammaService>();
+        services.AddSingleton<DdcService>();
         services.AddSingleton<NightGlowService>();
 
         services.AddSingleton<NotifyIconViewModel>();
