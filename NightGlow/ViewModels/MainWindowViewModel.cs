@@ -136,6 +136,7 @@ public class MonitorItemViewModel : ObservableObject
     public string VirtualName { get; set; }
     public string DeviceName { get; set; }
     public string PhysicalName { get; set; }
+    public string CombinedName { get => $"{VirtualName} - {DeviceName}"; }
 
     private int _brightness;
     private int _contrast;

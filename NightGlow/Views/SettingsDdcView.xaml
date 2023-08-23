@@ -47,9 +47,9 @@
                             Margin="0,0,0,4"
                             FontWeight="Normal"
                             >
-                            Not all monitors support DDC. Check if your monitor does by changing the brightness / contrast sliders.
+                            Not all monitors support DDC. Check if your monitor does by changing the sliders in the "Test DDC" section.
                             <LineBreak/>
-                            If the monitor does not support DDC, make sure the DDC checkbox is unchecked.
+                            If the monitor does not support DDC, make sure the monitor is unchecked.
                         </TextBlock>
 
                         <Expander
@@ -92,53 +92,51 @@
                 >
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <DataTemplate.Resources>
-                            <Style TargetType="{x:Type uc:SliderView}">
-                                <Setter Property="Margin" Value="0,4,0,0"/>
-                            </Style>
-                        </DataTemplate.Resources>
-
                         <materialDesign:Card
                             Style="{StaticResource ContentCard}"
                             >
                             <StackPanel>
 
-                                <TextBlock
-                                    Style="{StaticResource TitleTextBlock}"
-                                    FontSize="16"
-                                    >
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat=" {0} ({1})">
-                                            <Binding Path="VirtualName"/>
-                                            <Binding Path="DeviceName"/>
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-
                                 <CheckBox
                                     materialDesign:CheckBoxAssist.CheckBoxSize="20"
-                                    Content="Enable DDC"
                                     IsChecked="{Binding EnableDdc, Mode=TwoWay}"
+                                    Content="{Binding CombinedName}"
+                                    FontSize="16"
+                                    Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                    />
+
+                                <Expander
+                                    Header="Test DDC"
+                                    materialDesign:ExpanderAssist.HeaderFontSize="14"
+                                    materialDesign:ExpanderAssist.HorizontalHeaderPadding="0"
+                                    Visibility="{Binding EnableDdc, Converter={StaticResource BoolToVisConv}}"
+                                    Background="{x:Null}"
                                     Margin="0,4,0,0"
-                                    />
+                                    >
+                                    <materialDesign:Card
+                                        Background="{StaticResource MaterialDesignDarkSeparatorBackground}"
+                                        Padding="4,2"
+                                        >
+                                        <StackPanel>
+                                            <uc:SliderView
+                                                Title="Brightness"
+                                                ValueMin="0"
+                                                ValueMax="100"
+                                                ValueStep="5"
+                                                SliderValue="{Binding Brightness, Mode=TwoWay}"
+                                                />
 
-                                <uc:SliderView
-                                    Title="Brightness"
-                                    ValueMin="0"
-                                    ValueMax="100"
-                                    ValueStep="5"
-                                    SliderValue="{Binding Brightness, Mode=TwoWay}"
-                                    Visibility="{Binding EnableDdc, Converter={StaticResource BoolToVisConv}}"
-                                    />
-
-                                <uc:SliderView
-                                    Title="Contrast"
-                                    ValueMin="0"
-                                    ValueMax="100"
-                                    ValueStep="5"
-                                    SliderValue="{Binding Contrast, Mode=TwoWay}"
-                                    Visibility="{Binding EnableDdc, Converter={StaticResource BoolToVisConv}}"
-                                    />
+                                            <!--<uc:SliderView
+                                                Title="Contrast"
+                                                ValueMin="0"
+                                                ValueMax="100"
+                                                ValueStep="5"
+                                                SliderValue="{Binding Contrast, Mode=TwoWay}"
+                                                Margin="0,4,0,0"
+                                                />-->
+                                        </StackPanel>
+                                    </materialDesign:Card>
+                                </Expander>
 
                                 <uc:SliderView
                                     Title="Max Brightness"
@@ -147,6 +145,7 @@
                                     ValueStep="5"
                                     SliderValue="{Binding MaxBrightness, Mode=TwoWay}"
                                     Visibility="{Binding EnableDdc, Converter={StaticResource BoolToVisConv}}"
+                                    Margin="0,4,0,0"
                                     />
 
                                 <uc:SliderView
@@ -156,6 +155,7 @@
                                     ValueStep="5"
                                     SliderValue="{Binding MinBrightnessPct, Mode=TwoWay}"
                                     Visibility="{Binding EnableDdc, Converter={StaticResource BoolToVisConv}}"
+                                    Margin="0,4,0,0"
                                     />
 
                             </StackPanel>
