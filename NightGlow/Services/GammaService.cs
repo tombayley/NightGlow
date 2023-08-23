@@ -4,14 +4,12 @@ using NightGlow.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reactive.Disposables;
 
 namespace NightGlow.Services;
 
 public partial class GammaService : IDisposable
 {
     private readonly SettingsService _settingsService;
-    private readonly IDisposable _eventRegistration;
 
     private bool _isUpdatingGamma;
 
@@ -25,57 +23,9 @@ public partial class GammaService : IDisposable
     public GammaService(SettingsService settingsService)
     {
         _settingsService = settingsService;
-
-        // Register for all system events that may indicate that the device context or gamma was changed from outside
-        _eventRegistration = new[]
-        {
-            // Sometimes gamma is reset in display related Windows settings
-            //SystemHook.TryRegister(
-            //    SystemHook.ForegroundWindowChanged,
-            //    InvalidateGamma
-            //) ?? Disposable.Empty,
-
-            PowerSettingNotification.TryRegister(
-                PowerSettingNotification.Ids.ConsoleDisplayStateChanged,
-                InvalidateGamma
-            ) ?? Disposable.Empty,
-            PowerSettingNotification.TryRegister(
-                PowerSettingNotification.Ids.PowerSavingStatusChanged,
-                InvalidateGamma
-            ) ?? Disposable.Empty,
-            PowerSettingNotification.TryRegister(
-                PowerSettingNotification.Ids.SessionDisplayStatusChanged,
-                InvalidateGamma
-            ) ?? Disposable.Empty,
-            PowerSettingNotification.TryRegister(
-                PowerSettingNotification.Ids.MonitorPowerStateChanged,
-                InvalidateGamma
-            ) ?? Disposable.Empty,
-            PowerSettingNotification.TryRegister(
-                PowerSettingNotification.Ids.AwayModeChanged,
-                InvalidateGamma
-            ) ?? Disposable.Empty,
-
-            SystemEvent.Register(
-                SystemEvent.Ids.DisplayChanged,
-                InvalidateDeviceContexts
-            ),
-            SystemEvent.Register(
-                SystemEvent.Ids.PaletteChanged,
-                InvalidateDeviceContexts
-            ),
-            SystemEvent.Register(
-                SystemEvent.Ids.SettingsChanged,
-                InvalidateDeviceContexts
-            ),
-            SystemEvent.Register(
-                SystemEvent.Ids.SystemColorsChanged,
-                InvalidateDeviceContexts
-            )
-        }.Aggregate();
     }
 
-    private void InvalidateGamma()
+    public void InvalidateGamma()
     {
         // Don't invalidate gamma when we're in the process of changing it ourselves,
         // to avoid an infinite loop.
@@ -86,11 +36,9 @@ public partial class GammaService : IDisposable
         Debug.WriteLine("Gamma invalidated.");
     }
 
-    private void InvalidateDeviceContexts()
+    public void InvalidateDeviceContexts()
     {
         _areDeviceContextsValid = false;
-        Debug.WriteLine("Device contexts invalidated.");
-
         InvalidateGamma();
     }
 
@@ -195,7 +143,6 @@ public partial class GammaService : IDisposable
         foreach (var deviceContext in _deviceContexts)
             deviceContext.ResetGamma();
 
-        _eventRegistration.Dispose();
         _deviceContexts.DisposeAll();
     }
 }

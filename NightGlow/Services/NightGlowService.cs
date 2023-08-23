@@ -2,9 +2,12 @@
 using NightGlow.Data;
 using NightGlow.Models;
 using NightGlow.MonitorConfig;
+using NightGlow.WindowsApi;
+using NightGlow.Utils.Extensions;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Disposables;
 
 namespace NightGlow.Services;
 
@@ -13,12 +16,11 @@ public class NightGlowService : ObservableObject, IDisposable
 {
 
     private readonly SettingsService _settingsService;
-
     private readonly HotKeyService _hotKeyService;
-
     private readonly GammaService _gammaService;
-
     private readonly DdcService _ddcService;
+
+    private readonly IDisposable _eventRegistration;
 
     public double Brightness
     {
@@ -47,6 +49,64 @@ public class NightGlowService : ObservableObject, IDisposable
         _ddcService = ddcService;
 
         RegisterHotKeys();
+
+        // Register for all system events that may indicate that the device context or gamma was changed from outside
+        _eventRegistration = new[]
+        {
+            // Sometimes gamma is reset in display related Windows settings
+            //SystemHook.TryRegister(
+            //    SystemHook.ForegroundWindowChanged,
+            //    InvalidateGamma
+            //) ?? Disposable.Empty,
+            PowerSettingNotification.TryRegister(
+                PowerSettingNotification.Ids.ConsoleDisplayStateChanged,
+                PotentialGammaChange
+            ) ?? Disposable.Empty,
+            PowerSettingNotification.TryRegister(
+                PowerSettingNotification.Ids.PowerSavingStatusChanged,
+                PotentialGammaChange
+            ) ?? Disposable.Empty,
+            PowerSettingNotification.TryRegister(
+                PowerSettingNotification.Ids.SessionDisplayStatusChanged,
+                PotentialGammaChange
+            ) ?? Disposable.Empty,
+            PowerSettingNotification.TryRegister(
+                PowerSettingNotification.Ids.MonitorPowerStateChanged,
+                PotentialGammaChange
+            ) ?? Disposable.Empty,
+            PowerSettingNotification.TryRegister(
+                PowerSettingNotification.Ids.AwayModeChanged,
+                PotentialGammaChange
+            ) ?? Disposable.Empty,
+
+            SystemEvent.Register(
+                SystemEvent.Ids.DisplayChanged,
+                DisplaysChanged
+            ),
+            SystemEvent.Register(
+                SystemEvent.Ids.PaletteChanged,
+                DisplaysChanged
+            ),
+            SystemEvent.Register(
+                SystemEvent.Ids.SettingsChanged,
+                DisplaysChanged
+            ),
+            SystemEvent.Register(
+                SystemEvent.Ids.SystemColorsChanged,
+                DisplaysChanged
+            )
+        }.Aggregate();
+    }
+
+    private void PotentialGammaChange()
+    {
+        _gammaService.InvalidateGamma();
+    }
+
+    private void DisplaysChanged()
+    {
+        _gammaService.InvalidateDeviceContexts();
+        _ddcService.UpdateMonitors();
     }
 
     public void UnregisterHotKeys()
@@ -199,7 +259,7 @@ public class NightGlowService : ObservableObject, IDisposable
 
     public void Dispose()
     {
-
+        _eventRegistration.Dispose();
     }
 
 }
