@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Threading.Tasks;
 
 namespace NightGlow.Services;
 
@@ -107,6 +108,11 @@ public class NightGlowService : ObservableObject, IDisposable
     {
         _gammaService.InvalidateDeviceContexts();
         _ddcService.UpdateMonitors();
+
+        Task.Delay(2000).ContinueWith(_ =>
+        {
+            UpdateConfiguration();
+        });
     }
 
     public void UnregisterHotKeys()
