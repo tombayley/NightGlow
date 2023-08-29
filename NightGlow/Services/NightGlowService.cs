@@ -154,13 +154,11 @@ public class NightGlowService : ObservableObject, IDisposable
 
     public void SetBrightness(double brightness)
     {
-        Debug.WriteLine(string.Format("SetBrightness {0}", brightness));
         SetConfig(brightness, ColorConfig.Temperature);
     }
 
     public void SetTemperature(int temperature)
     {
-        Debug.WriteLine(string.Format("SetTemperature {0}", temperature));
         SetConfig(ColorConfig.Brightness, temperature);
     }
 
