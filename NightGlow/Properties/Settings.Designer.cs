@@ -190,5 +190,17 @@ namespace NightGlow.Properties {
                 this["HotKeyBrightTempDec"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DdcConfigJson {
+            get {
+                return ((string)(this["DdcConfigJson"]));
+            }
+            set {
+                this["DdcConfigJson"] = value;
+            }
+        }
     }
 }

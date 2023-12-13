@@ -8,7 +8,7 @@
 
 <h1 align="center">Night Glow</h1>
 
-**Night Glow** is a Windows app that allows you to control screen brightness (gamma) and temperature using hotkeys.
+**Night Glow** is a Windows app that allows you to control screen brightness (using gamma or DDC/CI) and temperature using hotkeys.
 It runs in the background in the system tray. Click the tray icon to open the main window, where you can adjust settings.
 
 Inspiration taken from [f.lux](https://justgetflux.com/) and [LightBulb](https://github.com/Tyrrrz/LightBulb).
@@ -26,13 +26,15 @@ The app is built and released automatically from source using GitHub Actions [he
 
 
 ## Features
-- [x] Customizable hotkeys for brightness ↑/↓, temperature ↑/↓, brightness & temperature ↑/↓
-- [x] Custom brightness & temperature min/max/step values
-- [x] Low resource usage
-- [ ] Control monitor native brightness using DDC/CI
-- [ ] Option to show a small popup when the brightness/temperature is changed
-- [ ] Smooth transition between brightness/temperature levels
-- [ ] Day/night modes for automatic transition at sunrise/sunset
+- Customizable hotkeys for brightness ↑/↓, temperature ↑/↓, brightness & temperature ↑/↓
+- Custom brightness & temperature min/max/step values
+- Low resource usage
+- Control monitor brightness natively using DDC/CI
+
+
+## Features not included
+- Smooth transition between brightness/temperature levels
+- Day/night modes for automatic transition at sunrise/sunset
 
 
 ## Screenshots
@@ -47,4 +49,7 @@ The app is built and released automatically from source using GitHub Actions [he
     <br/>
     <br/>
     <img align="center" src="res/limits.png" style="box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);" />
+    <br/>
+    <br/>
+    <img align="center" src="res/ddc.png" style="box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);" />
 </p>

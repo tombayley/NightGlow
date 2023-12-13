@@ -16,8 +16,8 @@
             Margin="{StaticResource WindowViewMargin}"
             >
             <StackPanel.Resources>
-                <Style TargetType="{x:Type DockPanel}">
-                    <Setter Property="Margin" Value="0,10,0,0"/>
+                <Style TargetType="uc:HotKeyView">
+                    <Setter Property="Margin" Value="0,4,0,0"/>
                 </Style>
             </StackPanel.Resources>
 

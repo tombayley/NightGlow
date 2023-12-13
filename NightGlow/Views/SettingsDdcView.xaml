@@ -1,0 +1,170 @@
+﻿<UserControl
+    x:Class="NightGlow.Views.SettingsDdcView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:uc="clr-namespace:NightGlow.Views.Controls"
+    mc:Ignorable="d" 
+    >
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConv" />
+    </UserControl.Resources>
+
+    <ScrollViewer
+        VerticalScrollBarVisibility="Auto"
+        >
+        <StackPanel
+            Margin="12,8"
+            >
+
+            <DockPanel
+                LastChildFill="True"
+                >
+
+                <Button
+                    DockPanel.Dock="Right"
+                    Content="REFRESH"
+                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                    Click="RefreshButton_Click"
+                    HorizontalAlignment="Right"
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Top"
+                    />
+
+                <Expander
+                    Header="Help"
+                    materialDesign:ExpanderAssist.HorizontalHeaderPadding="0"
+                    materialDesign:ExpanderAssist.HeaderFontSize="16"
+                    FontSize="12"
+                    >
+                    <StackPanel>
+
+                        <TextBlock
+                            TextWrapping="Wrap"
+                            Margin="0,0,0,4"
+                            FontWeight="Normal"
+                            >
+                            Not all monitors support DDC. Check if your monitor does by changing the sliders in the "Test DDC" section.
+                            <LineBreak/>
+                            If the monitor does not support DDC, make sure the monitor is unchecked.
+                        </TextBlock>
+
+                        <Expander
+                            Header="Max Brightness?"
+                            materialDesign:ExpanderAssist.HorizontalHeaderPadding="0"
+                            materialDesign:ExpanderAssist.HeaderFontSize="12"
+                            FontWeight="Normal"
+                            >
+                            <TextBlock TextWrapping="Wrap">
+                                - The maximum native brightness to set the monitor to.
+                                <LineBreak/>
+                                - Set this to the brightness value in your monitor's settings.
+                            </TextBlock>
+                        </Expander>
+
+                        <Expander
+                            Header="Min Brightness %?"
+                            materialDesign:ExpanderAssist.HorizontalHeaderPadding="0"
+                            materialDesign:ExpanderAssist.HeaderFontSize="12"
+                            FontWeight="Normal"
+                            >
+                            <TextBlock TextWrapping="Wrap">
+                                - Different monitors have different perceived brightness levels when their brightness is set to 0.
+                                <LineBreak/>
+                                - When the brightness is below this value, gamma will be used instead of DDC to further reduce brightness. Useful if display is too bright when DDC brightness is 0.
+                                <LineBreak/>
+                                - Set this to the approximate brightness percentage of your monitor when it's brightness is at 0 (0% is off, 100% is at the same level as "Max Brightness").
+                            </TextBlock>
+                        </Expander>
+
+                    </StackPanel>
+                </Expander>
+
+            </DockPanel>
+
+            <ItemsControl
+                ItemsSource="{Binding MonitorItems}"
+                HorizontalContentAlignment="Stretch"
+                Margin="0,6,0,0"
+                >
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <materialDesign:Card
+                            Style="{StaticResource ContentCard}"
+                            >
+                            <StackPanel>
+
+                                <CheckBox
+                                    materialDesign:CheckBoxAssist.CheckBoxSize="20"
+                                    IsChecked="{Binding EnableDdc, Mode=TwoWay}"
+                                    Content="{Binding CombinedName}"
+                                    FontSize="16"
+                                    Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                    />
+
+                                <Expander
+                                    Header="Test DDC"
+                                    materialDesign:ExpanderAssist.HeaderFontSize="14"
+                                    materialDesign:ExpanderAssist.HorizontalHeaderPadding="0"
+                                    Visibility="{Binding EnableDdc, Converter={StaticResource BoolToVisConv}}"
+                                    Background="{x:Null}"
+                                    Margin="0,4,0,0"
+                                    >
+                                    <materialDesign:Card
+                                        Background="{StaticResource MaterialDesignDarkSeparatorBackground}"
+                                        Padding="4,2"
+                                        >
+                                        <StackPanel>
+                                            <uc:SliderView
+                                                Title="Brightness"
+                                                ValueMin="0"
+                                                ValueMax="100"
+                                                ValueStep="5"
+                                                SliderValue="{Binding Brightness, Mode=TwoWay}"
+                                                />
+
+                                            <!--<uc:SliderView
+                                                Title="Contrast"
+                                                ValueMin="0"
+                                                ValueMax="100"
+                                                ValueStep="5"
+                                                SliderValue="{Binding Contrast, Mode=TwoWay}"
+                                                Margin="0,4,0,0"
+                                                />-->
+                                        </StackPanel>
+                                    </materialDesign:Card>
+                                </Expander>
+
+                                <uc:SliderView
+                                    Title="Max Brightness"
+                                    ValueMin="0"
+                                    ValueMax="100"
+                                    ValueStep="5"
+                                    SliderValue="{Binding MaxBrightness, Mode=TwoWay}"
+                                    Visibility="{Binding EnableDdc, Converter={StaticResource BoolToVisConv}}"
+                                    Margin="0,4,0,0"
+                                    />
+
+                                <uc:SliderView
+                                    Title="Min Brightness %"
+                                    ValueMin="0"
+                                    ValueMax="100"
+                                    ValueStep="5"
+                                    SliderValue="{Binding MinBrightnessPct, Mode=TwoWay}"
+                                    Visibility="{Binding EnableDdc, Converter={StaticResource BoolToVisConv}}"
+                                    Margin="0,4,0,0"
+                                    />
+
+                            </StackPanel>
+                        </materialDesign:Card>
+                    
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>
