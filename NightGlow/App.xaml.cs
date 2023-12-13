@@ -13,7 +13,7 @@ namespace NightGlow;
 
 public partial class App : Application
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly ServiceProvider _serviceProvider;
 
     private TaskbarIcon? notifyIcon;
 
@@ -28,6 +28,7 @@ public partial class App : Application
     public static string ExecutablePath { get; } = Path.ChangeExtension(Assembly.Location, "exe");
 
     public static string UrlReleaseHistory { get; } = "https://github.com/tombayley/NightGlow/releases";
+
     public App()
     {
         IServiceCollection services = new ServiceCollection();
@@ -40,6 +41,7 @@ public partial class App : Application
         services.AddSingleton<SettingsService>();
         services.AddSingleton<HotKeyService>();
         services.AddSingleton<GammaService>();
+        services.AddSingleton<DdcService>();
         services.AddSingleton<NightGlowService>();
 
         services.AddSingleton<NotifyIconViewModel>();
@@ -82,6 +84,7 @@ public partial class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
+        _serviceProvider.Dispose();
         notifyIcon?.Dispose();
         base.OnExit(e);
     }

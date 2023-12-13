@@ -116,6 +116,28 @@
 
         </TabItem>
 
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel
+                    Width="auto"
+                    Height="auto">
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        HorizontalAlignment="Center"
+                        Kind="Monitor" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Text="DDC" />
+                </StackPanel>
+            </TabItem.Header>
+
+            <views:SettingsDdcView
+                Background="{DynamicResource MaterialDesignPaper}"
+                />
+
+        </TabItem>
+
     </TabControl>
 
 </Window>

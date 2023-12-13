@@ -4,14 +4,12 @@ using NightGlow.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reactive.Disposables;
 
 namespace NightGlow.Services;
 
 public partial class GammaService : IDisposable
 {
     private readonly SettingsService _settingsService;
-    private readonly IDisposable _eventRegistration;
 
     private bool _isUpdatingGamma;
 
@@ -19,63 +17,15 @@ public partial class GammaService : IDisposable
     private bool _areDeviceContextsValid;
     private DateTimeOffset _lastGammaInvalidationTimestamp = DateTimeOffset.MinValue;
 
-    private ColorConfiguration? _lastConfiguration;
+    private IDictionary<string, ColorConfiguration?> _lastConfigurations = new Dictionary<string, ColorConfiguration?>();
     private DateTimeOffset _lastUpdateTimestamp = DateTimeOffset.MinValue;
 
     public GammaService(SettingsService settingsService)
     {
         _settingsService = settingsService;
-
-        // Register for all system events that may indicate that the device context or gamma was changed from outside
-        _eventRegistration = new[]
-        {
-            // Sometimes gamma is reset in display related Windows settings
-            //SystemHook.TryRegister(
-            //    SystemHook.ForegroundWindowChanged,
-            //    InvalidateGamma
-            //) ?? Disposable.Empty,
-
-            PowerSettingNotification.TryRegister(
-                PowerSettingNotification.Ids.ConsoleDisplayStateChanged,
-                InvalidateGamma
-            ) ?? Disposable.Empty,
-            PowerSettingNotification.TryRegister(
-                PowerSettingNotification.Ids.PowerSavingStatusChanged,
-                InvalidateGamma
-            ) ?? Disposable.Empty,
-            PowerSettingNotification.TryRegister(
-                PowerSettingNotification.Ids.SessionDisplayStatusChanged,
-                InvalidateGamma
-            ) ?? Disposable.Empty,
-            PowerSettingNotification.TryRegister(
-                PowerSettingNotification.Ids.MonitorPowerStateChanged,
-                InvalidateGamma
-            ) ?? Disposable.Empty,
-            PowerSettingNotification.TryRegister(
-                PowerSettingNotification.Ids.AwayModeChanged,
-                InvalidateGamma
-            ) ?? Disposable.Empty,
-
-            SystemEvent.Register(
-                SystemEvent.Ids.DisplayChanged,
-                InvalidateDeviceContexts
-            ),
-            SystemEvent.Register(
-                SystemEvent.Ids.PaletteChanged,
-                InvalidateDeviceContexts
-            ),
-            SystemEvent.Register(
-                SystemEvent.Ids.SettingsChanged,
-                InvalidateDeviceContexts
-            ),
-            SystemEvent.Register(
-                SystemEvent.Ids.SystemColorsChanged,
-                InvalidateDeviceContexts
-            )
-        }.Aggregate();
     }
 
-    private void InvalidateGamma()
+    public void InvalidateGamma()
     {
         // Don't invalidate gamma when we're in the process of changing it ourselves,
         // to avoid an infinite loop.
@@ -86,11 +36,9 @@ public partial class GammaService : IDisposable
         Debug.WriteLine("Gamma invalidated.");
     }
 
-    private void InvalidateDeviceContexts()
+    public void InvalidateDeviceContexts()
     {
         _areDeviceContextsValid = false;
-        Debug.WriteLine("Device contexts invalidated.");
-
         InvalidateGamma();
     }
 
@@ -104,7 +52,7 @@ public partial class GammaService : IDisposable
         _deviceContexts.DisposeAll();
         _deviceContexts = DeviceContext.GetAllScreens();
 
-        _lastConfiguration = null;
+        _lastConfigurations.Clear();
     }
 
     private bool IsGammaStale()
@@ -123,21 +71,22 @@ public partial class GammaService : IDisposable
         return false;
     }
 
-    private bool IsSignificantChange(ColorConfiguration configuration)
+    private bool IsSignificantChange(ColorConfiguration configuration, string deviceName)
     {
-        // Nothing to compare to
-        if (_lastConfiguration is not { } lastConfiguration)
-            return true;
+        _lastConfigurations.TryGetValue(deviceName, out ColorConfiguration? lastConfigurationNullable);
+        if (lastConfigurationNullable == null) return true;
+
+        ColorConfiguration lastConfiguration = (ColorConfiguration)lastConfigurationNullable;
 
         return
             Math.Abs(configuration.Temperature - lastConfiguration.Temperature) > 15 ||
             Math.Abs(configuration.Brightness - lastConfiguration.Brightness) > 0.01;
     }
 
-    public void SetGamma(ColorConfiguration configuration)
+    public void SetDeviceGamma(ColorConfiguration configuration, string deviceName)
     {
         // Avoid unnecessary changes as updating too often will cause stutters
-        if (!IsGammaStale() && !IsSignificantChange(configuration))
+        if (!IsGammaStale() && !IsSignificantChange(configuration, deviceName))
             return;
 
         EnsureValidDeviceContexts();
@@ -146,19 +95,47 @@ public partial class GammaService : IDisposable
 
         foreach (var deviceContext in _deviceContexts)
         {
+            if (!deviceContext.DeviceName.Equals(deviceName)) continue;
             deviceContext.SetGamma(
                 GetRed(configuration) * configuration.Brightness,
                 GetGreen(configuration) * configuration.Brightness,
                 GetBlue(configuration) * configuration.Brightness
             );
+            break;
         }
 
         _isUpdatingGamma = false;
 
-        _lastConfiguration = configuration;
+        _lastConfigurations[deviceName] = configuration;
         _lastUpdateTimestamp = DateTimeOffset.Now;
-        Debug.WriteLine($"Updated gamma to {configuration}.");
+        //Debug.WriteLine($"Updated gamma to {configuration}.");
     }
+
+    //public void SetAllGamma(ColorConfiguration configuration)
+    //{
+    //    // Avoid unnecessary changes as updating too often will cause stutters
+    //    if (!IsGammaStale() && !IsSignificantChange(configuration))
+    //        return;
+
+    //    EnsureValidDeviceContexts();
+
+    //    _isUpdatingGamma = true;
+
+    //    foreach (var deviceContext in _deviceContexts)
+    //    {
+    //        deviceContext.SetGamma(
+    //            GetRed(configuration) * configuration.Brightness,
+    //            GetGreen(configuration) * configuration.Brightness,
+    //            GetBlue(configuration) * configuration.Brightness
+    //        );
+    //    }
+
+    //    _isUpdatingGamma = false;
+
+    //    _lastConfiguration = configuration;
+    //    _lastUpdateTimestamp = DateTimeOffset.Now;
+    //    Debug.WriteLine($"Updated gamma to {configuration}.");
+    //}
 
     public void Dispose()
     {
@@ -166,7 +143,6 @@ public partial class GammaService : IDisposable
         foreach (var deviceContext in _deviceContexts)
             deviceContext.ResetGamma();
 
-        _eventRegistration.Dispose();
         _deviceContexts.DisposeAll();
     }
 }

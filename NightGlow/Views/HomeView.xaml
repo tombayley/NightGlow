@@ -5,10 +5,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:nightGlow="clr-namespace:NightGlow"
-    xmlns:local="clr-namespace:NightGlow.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:conv="clr-namespace:NightGlow.Views.Converters"
     mc:Ignorable="d"
     >
+
+    <UserControl.Resources>
+        <conv:DecToPctConverter x:Key="DecToPctConverter"/>
+    </UserControl.Resources>
 
     <DockPanel
         Margin="{StaticResource WindowViewMargin}"
@@ -69,7 +73,7 @@
                             />
 
                         <TextBlock
-                            Text="{Binding NightGlowService.Brightness, StringFormat={}{0:F2}}"
+                            Text="{Binding NightGlowService.Brightness, Converter={StaticResource DecToPctConverter}}"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             />
@@ -87,12 +91,12 @@
                     <DockPanel LastChildFill="False">
                         <TextBlock
                             Style="{StaticResource SliderLimitPreview}"
-                            Text="{Binding SettingsService.BrightnessMin, StringFormat={}{0:F2}}"
+                            Text="{Binding SettingsService.BrightnessMin, Converter={StaticResource DecToPctConverter}}"
                             DockPanel.Dock="Left"
                             />
                         <TextBlock
                             Style="{StaticResource SliderLimitPreview}"
-                            Text="{Binding SettingsService.BrightnessMax, StringFormat={}{0:F2}}"
+                            Text="{Binding SettingsService.BrightnessMax, Converter={StaticResource DecToPctConverter}}"
                             DockPanel.Dock="Right"
                             />
                     </DockPanel>
