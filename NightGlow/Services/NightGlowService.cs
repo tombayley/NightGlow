@@ -109,10 +109,7 @@ public class NightGlowService : ObservableObject, IDisposable
         _gammaService.InvalidateDeviceContexts();
         _ddcService.UpdateMonitors();
 
-        Task.Delay(2000).ContinueWith(_ =>
-        {
-            UpdateConfiguration();
-        });
+        Task.Delay(2000).ContinueWith(_ => UpdateConfiguration());
     }
 
     public void UnregisterHotKeys()
@@ -124,32 +121,20 @@ public class NightGlowService : ObservableObject, IDisposable
     {
         _hotKeyService.UnregisterAllHotKeys();
 
-        RegisterKey(_settingsService.HotKeyBrightnessInc, () =>
-        {
-            ChangeConfig(_settingsService.BrightnessStep, 0);
-        });
+        RegisterKey(_settingsService.HotKeyBrightnessInc, () => 
+            ChangeConfig(_settingsService.BrightnessStep, 0));
         RegisterKey(_settingsService.HotKeyBrightnessDec, () =>
-        {
-            ChangeConfig(-_settingsService.BrightnessStep, 0);
-        });
+            ChangeConfig(-_settingsService.BrightnessStep, 0));
 
         RegisterKey(_settingsService.HotKeyTemperatureInc, () =>
-        {
-            ChangeConfig(0, _settingsService.TemperatureStep);
-        });
+            ChangeConfig(0, _settingsService.TemperatureStep));
         RegisterKey(_settingsService.HotKeyTemperatureDec, () =>
-        {
-            ChangeConfig(0, -_settingsService.TemperatureStep);
-        });
+            ChangeConfig(0, -_settingsService.TemperatureStep));
 
         RegisterKey(_settingsService.HotKeyBrightTempInc, () =>
-        {
-            ChangeConfig(_settingsService.BrightnessStep, _settingsService.TemperatureStep);
-        });
+            ChangeConfig(_settingsService.BrightnessStep, _settingsService.TemperatureStep));
         RegisterKey(_settingsService.HotKeyBrightTempDec, () =>
-        {
-            ChangeConfig(-_settingsService.BrightnessStep, -_settingsService.TemperatureStep);
-        });
+            ChangeConfig(-_settingsService.BrightnessStep, -_settingsService.TemperatureStep));
     }
 
     private void RegisterKey(HotKey hotKey, Action callback)
