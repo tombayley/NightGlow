@@ -32,7 +32,7 @@ public class PhysicalMonitor
 
     public void SetBrightness(uint value)
     {
-        bool success = RetrySet(SetMonitorBrightness, Monitor.hPhysicalMonitor, value);
+        bool success = RetrySet(SetMonitorBrightness, GetBrightness, Monitor.hPhysicalMonitor, value);
         if (success)
             Brightness.Current = value;
     }
@@ -47,29 +47,30 @@ public class PhysicalMonitor
 
     public void SetContrast(uint value)
     {
-        bool success = RetrySet(SetMonitorContrast, Monitor.hPhysicalMonitor, value);
+        bool success = RetrySet(SetMonitorContrast, GetContrast, Monitor.hPhysicalMonitor, value);
         if (success)
             Contrast.Current = value;
     }
 
-    private bool RetrySet(Func<nint, uint, bool> function, nint monitor, uint value)
+    private bool RetrySet(Func<nint, uint, bool> setFunction, Func<Setting> getFunction, nint monitor, uint value)
     {
-        int attempt = 1;
-        while (attempt <= DDC_ATTEMPTS)
+        for (int attempt = 1; attempt <= DDC_ATTEMPTS; attempt++)
         {
-            if (function(monitor, value)) return true;
-            attempt++;
+            // Sometimes setting a monitor value (e.g. brightness) will report as success,
+            // but monitor does not change brightness.
+            // Confirm value has been set by getting current value after doing the set.
+            if (setFunction(monitor, value) && getFunction().Current == value)
+                return true;
         }
         return false;
     }
 
-    private bool RetryGet(Func<nint, bool> function, nint monitor)
+    private bool RetryGet(Func<nint, bool> getFunction, nint monitor)
     {
-        int attempt = 1;
-        while (attempt <= DDC_ATTEMPTS)
+        for (int attempt = 1; attempt <= DDC_ATTEMPTS; attempt++)
         {
-            if (function(monitor)) return true;
-            attempt++;
+            if (getFunction(monitor))
+                return true;
         }
         return false;
     }
