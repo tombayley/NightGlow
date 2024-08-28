@@ -52,4 +52,7 @@ The app is built and released automatically from source using GitHub Actions [he
     <br/>
     <br/>
     <img align="center" src="res/ddc.png" style="box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);" />
+    <br/>
+    <br/>
+    <img align="center" src="res/popup.png" style="box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);" />
 </p>
