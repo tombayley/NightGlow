@@ -16,6 +16,14 @@ public class PhysicalMonitor
     private readonly Setting Brightness = new();
     private readonly Setting Contrast = new();
 
+    // Brightness
+    private CancellationTokenSource _cancelTokenB = new CancellationTokenSource();
+    private readonly object _lockB = new object();
+
+    // Contrast
+    private CancellationTokenSource _cancelTokenC = new CancellationTokenSource();
+    private readonly object _lockC = new object();
+
     public PhysicalMonitor(PHYSICAL_MONITOR monitor)
     {
         Monitor = monitor;
@@ -32,9 +40,15 @@ public class PhysicalMonitor
 
     public void SetBrightness(uint value)
     {
-        bool success = RetrySet(SetMonitorBrightness, GetBrightness, Monitor.hPhysicalMonitor, value);
-        if (success)
-            Brightness.Current = value;
+        lock (_lockB)
+        {
+            _cancelTokenB.Cancel();
+            _cancelTokenB.Dispose();
+            _cancelTokenB = new CancellationTokenSource();
+            var cancelToken = _cancelTokenB.Token;
+
+            Task.Run(() => RetrySet(SetMonitorBrightness, GetBrightness, Monitor.hPhysicalMonitor, value, Brightness, cancelToken), cancelToken);
+        }
     }
 
     public Setting GetContrast()
@@ -47,22 +61,50 @@ public class PhysicalMonitor
 
     public void SetContrast(uint value)
     {
-        bool success = RetrySet(SetMonitorContrast, GetContrast, Monitor.hPhysicalMonitor, value);
-        if (success)
-            Contrast.Current = value;
+        lock (_lockC)
+        {
+            _cancelTokenC.Cancel();
+            _cancelTokenC.Dispose();
+            _cancelTokenC = new CancellationTokenSource();
+            var cancelToken = _cancelTokenC.Token;
+
+            Task.Run(() => RetrySet(SetMonitorContrast, GetContrast, Monitor.hPhysicalMonitor, value, Contrast, cancelToken), cancelToken);
+        }
     }
 
-    private bool RetrySet(Func<nint, uint, bool> setFunction, Func<Setting> getFunction, nint monitor, uint value)
-    {
-        for (int attempt = 1; attempt <= DDC_ATTEMPTS; attempt++)
+    private static void RetrySet(
+        Func<nint, uint, bool> setFunction,
+        Func<Setting> getFunction,
+        nint monitor,
+        uint value,
+        Setting setting,
+        CancellationToken cancelToken
+    ) {
+        try
         {
-            // Sometimes setting a monitor value (e.g. brightness) will report as success,
-            // but monitor does not change brightness.
-            // Confirm value has been set by getting current value after doing the set.
-            if (setFunction(monitor, value) && getFunction().Current == value)
-                return true;
+            for (int attempt = 1; attempt <= DDC_ATTEMPTS; attempt++)
+            {
+                // Check for cancellation before attempting the operation
+                cancelToken.ThrowIfCancellationRequested();
+
+                // Sometimes setting a monitor value (e.g. brightness) will report as success,
+                // but monitor does not change brightness.
+                // Confirm value has been set by getting current value after doing the set.
+                if (setFunction(monitor, value) && getFunction().Current == value)
+                {
+                    setting.Current = value;
+                    return;
+                }
+            }
         }
-        return false;
+        catch (TaskCanceledException)
+        {
+            Debug.WriteLine("Operation cancelled.");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 
     private bool RetryGet(Func<nint, bool> getFunction, nint monitor)
