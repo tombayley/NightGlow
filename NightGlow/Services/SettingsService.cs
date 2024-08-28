@@ -37,6 +37,17 @@ public class SettingsService : ObservableObject, IDisposable
         set => _extendedGammaRange.Set = value;
     }
 
+    public bool ShowBrightTempPopup
+    {
+        get => Settings.Default.ShowBrightTempPopup;
+        set
+        {
+            Settings.Default.ShowBrightTempPopup = value;
+            Settings.Default.Save();
+            OnPropertyChanged(nameof(ShowBrightTempPopup));
+        }
+    }
+
     public bool FirstLaunch
     {
         get => Settings.Default.FirstLaunch;

@@ -29,6 +29,13 @@
             <SolidColorBrush x:Key="SecondaryHueMidBrush" Color="{DynamicResource AccentColor}" />
             <SolidColorBrush x:Key="SecondaryHueMidForegroundBrush" Color="{DynamicResource TextColor}" />
 
+            <!-- Match/similar colors to the Windows volume popup for consistency -->
+            <!-- If changing Fore color, need to change color of popup SVGs too -->
+            <SolidColorBrush x:Key="WinVolPopupDarkBackColor" Color="#242424" />
+            <SolidColorBrush x:Key="WinVolPopupDarkForeColor" Color="#d9d6d6" />
+            <SolidColorBrush x:Key="WinVolPopupProgressDarkBackColor" Color="#7d7d7d" />
+            <SolidColorBrush x:Key="WinVolPopupDarkBorderColor" Color="#424242" />
+
             <Style x:Key="SliderLimitPreview" TargetType="TextBlock">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />

@@ -9,6 +9,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
+using NightGlow.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NightGlow.Services;
 
@@ -20,6 +22,8 @@ public class NightGlowService : ObservableObject, IDisposable
     private readonly HotKeyService _hotKeyService;
     private readonly GammaService _gammaService;
     private readonly DdcService _ddcService;
+
+    private readonly IServiceProvider _serviceProvider;
 
     private readonly IDisposable _eventRegistration;
 
@@ -41,13 +45,15 @@ public class NightGlowService : ObservableObject, IDisposable
         SettingsService settingsService,
         HotKeyService hotKeyService,
         GammaService gammaService,
-        DdcService ddcService
+        DdcService ddcService,
+        IServiceProvider serviceProvider
     )
     {
         _settingsService = settingsService;
         _hotKeyService = hotKeyService;
         _gammaService = gammaService;
         _ddcService = ddcService;
+        _serviceProvider = serviceProvider;
 
         RegisterHotKeys();
 
@@ -184,6 +190,11 @@ public class NightGlowService : ObservableObject, IDisposable
         OnPropertyChanged(nameof(Temperature));
 
         UpdateConfiguration();
+
+        if (_settingsService.ShowBrightTempPopup)
+        {
+            _serviceProvider.GetRequiredService<PopupWindow>().ShowPopup();
+        }
     }
 
     // Using the brightness value, check wheter to use ddc/gamma to set the brightness

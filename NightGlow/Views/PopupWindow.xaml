@@ -1,0 +1,73 @@
+﻿<Window
+    x:Class="NightGlow.Views.PopupWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:NightGlow.Views"
+    xmlns:uc="clr-namespace:NightGlow.Views.Controls"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:conv="clr-namespace:NightGlow.Views.Converters"
+    mc:Ignorable="d"
+    Width="200"
+    WindowStyle="None"
+    AllowsTransparency="True"
+    Topmost="True"
+    ResizeMode="NoResize"
+    ShowInTaskbar="False"
+    Background="Transparent"
+    SizeToContent="Height"
+    Focusable="False"
+    TextElement.Foreground="{DynamicResource WinVolPopupDarkForeColor}"
+    >
+
+    <Window.Resources>
+        <conv:DecToPctConverter x:Key="DecToPctConverter"/>
+    </Window.Resources>
+
+    <!-- View to animate in the window. Larger bottom padding so view isnt immediately cut off when starting to animate -->
+    <Border
+        x:Name="AnimatedContainer"
+        Padding="4,4,4,16"
+        >
+
+        <Border.RenderTransform>
+            <TranslateTransform x:Name="AnimatedContainerTransform" />
+        </Border.RenderTransform>
+
+        <materialDesign:Card
+            Style="{StaticResource MaterialDesignElevatedCard}"
+            Background="{DynamicResource WinVolPopupDarkBackColor}"
+            UniformCornerRadius="10"
+            >
+            
+            <Border
+                BorderBrush="{DynamicResource WinVolPopupDarkBorderColor}"
+                BorderThickness="1"
+                CornerRadius="10"
+                Padding="0,2"
+                >
+
+                <StackPanel
+                    Orientation="Vertical"
+                    >
+
+                    <uc:PopupDisplayInfoView
+                        Icon="/Assets/popup-brightness.svg"
+                        SliderValue="{Binding NightGlowService.Brightness, Converter={StaticResource DecToPctConverter}}"
+                        SliderValueMin="{Binding SettingsService.BrightnessMin, Converter={StaticResource DecToPctConverter}}"
+                        SliderValueMax="{Binding SettingsService.BrightnessMax, Converter={StaticResource DecToPctConverter}}"
+                        />
+
+                    <uc:PopupDisplayInfoView
+                        Icon="/Assets/popup-temperature.svg"
+                        SliderValue="{Binding NightGlowService.Temperature}"
+                        SliderValueMin="{Binding SettingsService.TemperatureMin}"
+                        SliderValueMax="{Binding SettingsService.TemperatureMax}"
+                        />
+
+                </StackPanel>
+            </Border>
+        </materialDesign:Card>
+    </Border>
+</Window>

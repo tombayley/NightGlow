@@ -35,7 +35,10 @@ public partial class NotifyIconViewModel : ObservableObject, IDisposable
 
     public void ShowWindow()
     {
-        Application.Current.MainWindow ??= _serviceProvider.GetRequiredService<MainWindow>();
+        if (!(Application.Current.MainWindow is MainWindow))
+        {
+            Application.Current.MainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+        }
         Application.Current.MainWindow.Show();
         Application.Current.MainWindow.Activate();
     }
