@@ -84,8 +84,8 @@ public class PhysicalMonitor
         {
             for (int attempt = 1; attempt <= DDC_ATTEMPTS; attempt++)
             {
-                // Check for cancellation before attempting the operation
-                cancelToken.ThrowIfCancellationRequested();
+                if (cancelToken.IsCancellationRequested)
+                    return;
 
                 // Sometimes setting a monitor value (e.g. brightness) will report as success,
                 // but monitor does not change brightness.
