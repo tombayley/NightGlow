@@ -13,9 +13,9 @@ namespace NightGlow.Views;
 public partial class PopupWindow : Window
 {
 
-    private const double ANIM_TIME = 0.3;
+    private const double ANIM_TIME = 0.25;
     private const double DISPLAY_TIME = 2;
-    private const int BOTTOM_OFFSET = 16; // Offest above the taskbar / bottom of screen
+    private const int BOTTOM_OFFSET = 12; // Offest above the taskbar / bottom of screen
 
     private DispatcherTimer hideTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(DISPLAY_TIME) };
 
