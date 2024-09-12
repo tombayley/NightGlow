@@ -193,7 +193,7 @@ public class SettingsService : ObservableObject, IDisposable
 
     public void LoadDdcConfig()
     {
-        string ddcConfigJson = Settings.Default.DdcConfigJson;
+        string ddcConfigJson = Settings.Default.DdcConfigJsonV2;
         try
         {
             DdcConfig = JsonConvert.DeserializeObject<DdcConfig>(ddcConfigJson) ?? new DdcConfig();
@@ -208,7 +208,7 @@ public class SettingsService : ObservableObject, IDisposable
     public void SaveDdcConfig()
     {
         string ddcConfigJson = JsonConvert.SerializeObject(DdcConfig);
-        Settings.Default.DdcConfigJson = ddcConfigJson;
+        Settings.Default.DdcConfigJsonV2 = ddcConfigJson;
         Settings.Default.Save();
     }
 

@@ -51,7 +51,6 @@ public partial class PopupWindow : Window
         switch (state)
         {
             case STATE.HIDDEN:
-                Debug.WriteLine("Show()");
                 Show();
                 AnimateIn();
                 break;

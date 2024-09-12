@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using NightGlow.Data;
 using NightGlow.Models;
-using NightGlow.MonitorConfig;
 using NightGlow.WindowsApi;
 using NightGlow.Utils.Extensions;
 using System;
@@ -11,6 +10,7 @@ using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using NightGlow.Views;
 using Microsoft.Extensions.DependencyInjection;
+using NightGlow.ViewModels;
 
 namespace NightGlow.Services;
 
@@ -208,50 +208,48 @@ public class NightGlowService : ObservableObject, IDisposable
     {
         Debug.WriteLine("");
 
-        foreach (VirtualMonitor vm in _ddcService.Monitors.VirtualMonitors)
+        foreach (MonitorViewModel monitor in _ddcService.Monitors.MonitorItems)
         {
-            PhysicalMonitor? pm = vm.PhysicalMonitors.FirstOrDefault();
-            if (pm == null) continue;
-
             int configBrightnessPct = Convert.ToInt32(Brightness * 100);
 
-            DdcMonitorItem ddcMonitorItem = _settingsService.DdcConfig.GetOrCreateDdcMonitorItem(vm);
+            var ddcMonitor = monitor.DdcMonitor;
+            DdcConfigMonitor ddcConfigMonitor = _settingsService.DdcConfig.GetOrCreateDdcConfigMonitor(ddcMonitor);
 
-            if (ddcMonitorItem.EnableDdc && configBrightnessPct > ddcMonitorItem.MinBrightnessPct)
+            if (ddcConfigMonitor.EnableDdc && configBrightnessPct > ddcConfigMonitor.MinBrightnessPct)
             {
                 // Use DDC to set the brightness
 
                 // Find the percentage value the brightness is between lower (ddcMonitorItem.MinBrightnessPct) and upper (100)
-                double ddcRangePct = (double)(configBrightnessPct - ddcMonitorItem.MinBrightnessPct) / (100 - ddcMonitorItem.MinBrightnessPct);
-                int ddcBrightness = Convert.ToInt32(ddcRangePct * ddcMonitorItem.MaxBrightness);
+                double ddcRangePct = (double)(configBrightnessPct - ddcConfigMonitor.MinBrightnessPct) / (100 - ddcConfigMonitor.MinBrightnessPct);
+                int ddcBrightness = Convert.ToInt32(ddcRangePct * ddcConfigMonitor.MaxBrightness);
 
                 ColorConfiguration gamma = new ColorConfiguration(Temperature, _settingsService.BrightnessMax);
 
-                Debug.WriteLine($"Using DDC. DDC: {ddcBrightness}. Gamma: {gamma.Brightness}. Monitor: {ddcMonitorItem.Name}");
-                _ddcService.SetBrightness(vm, pm, ddcBrightness);
-                _gammaService.SetDeviceGamma(gamma, vm.DeviceName);
+                Debug.WriteLine($"Using DDC. DDC: {ddcBrightness}. Gamma: {gamma.Brightness}. Monitor: {ddcMonitor.Description}");
+                _ddcService.SetBrightness(ddcMonitor, ddcBrightness);
+                _gammaService.SetDeviceGamma(gamma, ddcMonitor.DeviceName);
 
             }
-            else if (ddcMonitorItem.EnableDdc)
+            else if (ddcConfigMonitor.EnableDdc)
             {
                 // Use Use gamma to set the brightness when DDC brightness is at minimum
 
-                double gammaRangePct = (double)(configBrightnessPct - _settingsService.BrightnessMin) / (ddcMonitorItem.MinBrightnessPct - _settingsService.BrightnessMin);
+                double gammaRangePct = (double)(configBrightnessPct - _settingsService.BrightnessMin) / (ddcConfigMonitor.MinBrightnessPct - _settingsService.BrightnessMin);
                 double gammaBrightness = gammaRangePct;
 
                 ColorConfiguration gamma = new ColorConfiguration(Temperature, gammaBrightness);
 
-                Debug.WriteLine($"Using Gam. DDC: 0. Gamma: {gammaBrightness}. Monitor: {ddcMonitorItem.Name}");
-                _ddcService.SetBrightness(vm, pm, 0);
-                _gammaService.SetDeviceGamma(gamma, vm.DeviceName);
+                Debug.WriteLine($"Using Gam. DDC: 0. Gamma: {gammaBrightness}. Monitor: {ddcMonitor.Description}");
+                _ddcService.SetBrightness(ddcMonitor, 0);
+                _gammaService.SetDeviceGamma(gamma, ddcMonitor.DeviceName);
 
             }
             else
             {
                 // Use Use gamma to set the brightness
 
-                Debug.WriteLine($"Using Gam. DDC: x. Gamma: {Brightness}. Monitor: {ddcMonitorItem.Name}");
-                _gammaService.SetDeviceGamma(ColorConfig, vm.DeviceName);
+                Debug.WriteLine($"Using Gam. DDC: x. Gamma: {Brightness}. Monitor: {ddcMonitor.Description}");
+                _gammaService.SetDeviceGamma(ColorConfig, ddcMonitor.DeviceName);
 
             }
         }

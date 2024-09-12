@@ -1,6 +1,8 @@
-﻿using System.Runtime.InteropServices;
+﻿using NightGlow.Models;
+using System;
+using System.Runtime.InteropServices;
 
-namespace NightGlow.MonitorConfig;
+namespace NightGlow.Helper;
 
 public class WinApi
 {
@@ -8,24 +10,44 @@ public class WinApi
     public const int ERROR_SUCCESS = 0;
 
     [DllImport("user32.dll")]
-    public static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr lprcClip, MonitorEnumProc lpfnEnum, IntPtr dwData);
+    public static extern bool EnumDisplayMonitors(
+        IntPtr hdc,
+        IntPtr lprcClip,
+        MonitorEnumProc lpfnEnum,
+        IntPtr dwData);
 
-    public delegate bool MonitorEnumProc(IntPtr hMonitor, IntPtr hdcMonitor, ref RECT lprcMonitor, IntPtr dwData);
+    public delegate bool MonitorEnumProc(
+        IntPtr hMonitor,
+        IntPtr hdcMonitor,
+        IntPtr lprcMonitor,
+        IntPtr dwData);
 
-    [DllImport("User32.dll", EntryPoint = "GetMonitorInfoW")]
-    public static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFOEX lpmi);
+    [DllImport("user32.dll", EntryPoint = "GetMonitorInfoW")]
+    public static extern bool GetMonitorInfo(
+        IntPtr hMonitor,
+        ref MONITORINFOEX lpmi);
 
-    [DllImport("User32.dll")]
-    public static extern int GetDisplayConfigBufferSizes(QUERY_DEVICE_CONFIG_FLAGS Flags, ref uint numPathArrayElements, ref uint numModeInfoArrayElements);
+    [DllImport("user32.dll")]
+    public static extern int GetDisplayConfigBufferSizes(
+        uint flags,
+        out uint numPathArrayElements,
+        out uint numModeInfoArrayElements);
+
+    [DllImport("user32.dll", CharSet = CharSet.Ansi)]
+    public static extern bool EnumDisplayDevices(
+        string lpDevice,
+        uint iDevNum,
+        ref DISPLAY_DEVICE lpDisplayDevice,
+        uint dwFlags);
 
     [DllImport("user32.dll")]
     public static extern int QueryDisplayConfig(
-        QUERY_DEVICE_CONFIG_FLAGS Flags,
-        ref uint NumPathArrayElements,
-        [Out] DISPLAYCONFIG_PATH_INFO[] PathInfoArray,
-        ref uint NumModeInfoArrayElements,
-        [Out] DISPLAYCONFIG_MODE_INFO[] ModeInfoArray,
-        IntPtr CurrentTopologyId
+        uint flags,
+        ref uint numPathArrayElements,
+        [Out] DISPLAYCONFIG_PATH_INFO[] pathInfoArray,
+        ref uint numModeInfoArrayElements,
+        [Out] DISPLAYCONFIG_MODE_INFO[] modeInfoArray,
+        IntPtr currentTopologyId
     );
 
     [DllImport("user32.dll")]
@@ -34,35 +56,84 @@ public class WinApi
     );
 
     [DllImport("dxva2.dll", SetLastError = true)]
-    public extern static bool GetNumberOfPhysicalMonitorsFromHMONITOR(IntPtr hMonitor, out uint pdwNumberOfPhysicalMonitors);
+    public extern static bool GetNumberOfPhysicalMonitorsFromHMONITOR(
+        IntPtr hMonitor,
+        out uint pdwNumberOfPhysicalMonitors);
 
     [DllImport("dxva2.dll", SetLastError = true)]
-    public extern static bool GetPhysicalMonitorsFromHMONITOR(IntPtr hMonitor, uint dwPhysicalMonitorArraySize, [Out] PHYSICAL_MONITOR[] pPhysicalMonitorArray);
+    public extern static bool GetPhysicalMonitorsFromHMONITOR(
+        IntPtr hMonitor,
+        uint dwPhysicalMonitorArraySize,
+        [Out] PHYSICAL_MONITOR[] pPhysicalMonitorArray);
 
     [DllImport("dxva2.dll", SetLastError = true)]
-    public extern static bool GetMonitorCapabilities(IntPtr hMonitor, out uint pdwMonitorCapabilities, out uint pdwSupportedColorTemperatures);
+    public extern static bool GetMonitorBrightness(
+        SafePhysicalMonitorHandle hMonitor,
+        out uint pdwMinimumBrightness,
+        out uint pdwCurrentBrightness,
+        out uint pdwMaximumBrightness);
 
     [DllImport("dxva2.dll", SetLastError = true)]
-    public extern static bool GetMonitorBrightness(IntPtr hMonitor, out uint pdwMinimumBrightness, out uint pdwCurrentBrightness, out uint pdwMaximumBrightness);
+    public extern static bool SetMonitorBrightness(
+        SafePhysicalMonitorHandle hMonitor,
+        uint dwNewBrightness);
 
     [DllImport("dxva2.dll", SetLastError = true)]
-    public extern static bool SetMonitorBrightness(IntPtr hMonitor, uint dwNewBrightness);
+    public extern static bool GetMonitorContrast(
+        SafePhysicalMonitorHandle hMonitor,
+        out uint pdwMinimumContrast,
+        out uint pdwCurrentContrast,
+        out uint pdwMaximumContrast);
 
     [DllImport("dxva2.dll", SetLastError = true)]
-    public extern static bool GetMonitorContrast(IntPtr hMonitor, out uint pdwMinimumContrast, out uint pdwCurrentContrast, out uint pdwMaximumContrast);
+    public extern static bool SetMonitorContrast(
+        SafePhysicalMonitorHandle hMonitor,
+        uint dwNewContrast);
 
     [DllImport("dxva2.dll", SetLastError = true)]
-    public extern static bool SetMonitorContrast(IntPtr hMonitor, uint dwNewContrast);
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool DestroyPhysicalMonitor(IntPtr hMonitor);
 
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct DISPLAY_DEVICE
+    {
+        public uint cb;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+        public string DeviceName;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+        public string DeviceString;
+        public DISPLAY_DEVICE_FLAG StateFlags;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+        public string DeviceID;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+        public string DeviceKey;
+    }
 
-    private const int PHYSICAL_MONITOR_DESCRIPTION_SIZE = 128;
+    [Flags]
+    public enum DISPLAY_DEVICE_FLAG : uint
+    {
+        DISPLAY_DEVICE_ATTACHED_TO_DESKTOP = 0x00000001,
+        DISPLAY_DEVICE_MULTI_DRIVER = 0x00000002,
+        DISPLAY_DEVICE_PRIMARY_DEVICE = 0x00000004,
+        DISPLAY_DEVICE_MIRRORING_DRIVER = 0x00000008,
+        DISPLAY_DEVICE_VGA_COMPATIBLE = 0x00000010,
+        DISPLAY_DEVICE_REMOVABLE = 0x00000020,
+        DISPLAY_DEVICE_ACC_DRIVER = 0x00000040,
+        DISPLAY_DEVICE_RDPUDD = 0x01000000,
+        DISPLAY_DEVICE_DISCONNECT = 0x02000000,
+        DISPLAY_DEVICE_REMOTE = 0x04000000,
+        DISPLAY_DEVICE_MODESPRUNED = 0x08000000,
 
-    [StructLayout(LayoutKind.Sequential)]
+        DISPLAY_DEVICE_ACTIVE = 0x00000001,
+        DISPLAY_DEVICE_ATTACHED = 0x00000002,
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public struct PHYSICAL_MONITOR
     {
         public IntPtr hPhysicalMonitor;
-        [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.U2, SizeConst = PHYSICAL_MONITOR_DESCRIPTION_SIZE)]
-        public char[] szPhysicalMonitorDescription;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+        public string szPhysicalMonitorDescription;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -94,6 +165,7 @@ public class WinApi
     {
         public uint value;
     }
+
     public enum DISPLAYCONFIG_DEVICE_INFO_TYPE : uint
     {
         DISPLAYCONFIG_DEVICE_INFO_GET_SOURCE_NAME = 1,
@@ -105,19 +177,12 @@ public class WinApi
         DISPLAYCONFIG_DEVICE_INFO_FORCE_UINT32 = 0xFFFFFFFF
     }
 
+    public const uint EDD_GET_DEVICE_INTERFACE_NAME = 0x00000001;
 
-
-    public enum QUERY_DEVICE_CONFIG_FLAGS : uint
-    {
-        QDC_ALL_PATHS = 0x00000001,
-        QDC_ONLY_ACTIVE_PATHS = 0x00000002,
-        QDC_DATABASE_CURRENT = 0x00000004
-    }
-
+    public const uint QDC_ONLY_ACTIVE_PATHS = 2;
 
     [StructLayout(LayoutKind.Sequential)]
     public struct RECT { public int left, top, right, bottom; }
-
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public struct MONITORINFOEX
@@ -126,7 +191,6 @@ public class WinApi
         public RECT rcMonitor;
         public RECT rcWork;
         public MONITORINFOF dwFlags;
-
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
         public string szDevice;
     }
@@ -136,9 +200,6 @@ public class WinApi
         MONITORINFOF_NONE = 0x00000000,
         MONITORINFOF_PRIMARY = 0x00000001,
     }
-
-
-
 
     [StructLayout(LayoutKind.Sequential)]
     public struct DISPLAYCONFIG_PATH_INFO
@@ -249,7 +310,7 @@ public class WinApi
         DISPLAYCONFIG_VIDEO_OUTPUT_TECHNOLOGY outputTechnology;
         DISPLAYCONFIG_ROTATION rotation;
         DISPLAYCONFIG_SCALING scaling;
-        DISPLAYCONFIG_RATIONAL refreshRate;
+        public DISPLAYCONFIG_RATIONAL refreshRate;
         DISPLAYCONFIG_SCANLINE_ORDERING scanLineOrdering;
         public bool targetAvailable;
         public uint statusFlags;
@@ -313,6 +374,5 @@ public class WinApi
         DISPLAYCONFIG_SCANLINE_ORDERING_INTERLACED_LOWERFIELDFIRST = 3,
         DISPLAYCONFIG_SCANLINE_ORDERING_FORCE_UINT32 = 0xFFFFFFFF
     }
-
 
 }

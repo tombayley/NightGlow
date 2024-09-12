@@ -4,13 +4,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NightGlow", "NightGlow\NightGlow.csproj", "{8E4BBB59-4D6D-48CF-9E04-CB3D7CA97401}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5D7C7E03-E446-49ED-977A-2EA6824FE29A} = {5D7C7E03-E446-49ED-977A-2EA6824FE29A}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NightGlow.WindowsApi", "NightGlow.WindowsApi\NightGlow.WindowsApi.csproj", "{961F5C16-4446-40EC-9A72-1C352920335D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NightGlow.MonitorConfig", "NightGlow.MonitorConfig\NightGlow.MonitorConfig.csproj", "{5D7C7E03-E446-49ED-977A-2EA6824FE29A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,18 +41,6 @@ Global
 		{961F5C16-4446-40EC-9A72-1C352920335D}.Release|x64.Build.0 = Release|Any CPU
 		{961F5C16-4446-40EC-9A72-1C352920335D}.Release|x86.ActiveCfg = Release|Any CPU
 		{961F5C16-4446-40EC-9A72-1C352920335D}.Release|x86.Build.0 = Release|Any CPU
-		{5D7C7E03-E446-49ED-977A-2EA6824FE29A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D7C7E03-E446-49ED-977A-2EA6824FE29A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D7C7E03-E446-49ED-977A-2EA6824FE29A}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5D7C7E03-E446-49ED-977A-2EA6824FE29A}.Debug|x64.Build.0 = Debug|Any CPU
-		{5D7C7E03-E446-49ED-977A-2EA6824FE29A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5D7C7E03-E446-49ED-977A-2EA6824FE29A}.Debug|x86.Build.0 = Debug|Any CPU
-		{5D7C7E03-E446-49ED-977A-2EA6824FE29A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D7C7E03-E446-49ED-977A-2EA6824FE29A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D7C7E03-E446-49ED-977A-2EA6824FE29A}.Release|x64.ActiveCfg = Release|Any CPU
-		{5D7C7E03-E446-49ED-977A-2EA6824FE29A}.Release|x64.Build.0 = Release|Any CPU
-		{5D7C7E03-E446-49ED-977A-2EA6824FE29A}.Release|x86.ActiveCfg = Release|Any CPU
-		{5D7C7E03-E446-49ED-977A-2EA6824FE29A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

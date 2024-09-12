@@ -33,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NightGlow.MonitorConfig\NightGlow.MonitorConfig.csproj" />
     <ProjectReference Include="..\NightGlow.WindowsApi\NightGlow.WindowsApi.csproj" />
   </ItemGroup>
 

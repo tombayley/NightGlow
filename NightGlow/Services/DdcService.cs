@@ -1,52 +1,42 @@
-﻿using NightGlow.MonitorConfig;
-using System.Threading;
+﻿using NightGlow.Models;
 
 namespace NightGlow.Services;
 
 public class DdcService
 {
 
-    public Monitors Monitors = new Monitors();
+    private readonly SettingsService _settingsService;
 
-    private Timer timer;
-    private bool isUpdatingMonitors = false;
+    public readonly Monitors _monitors;
 
-    public DdcService()
+    public Monitors Monitors { get => _monitors; }
+
+    public DdcService(SettingsService settingsService)
     {
+        _settingsService = settingsService;
+        _monitors = new Monitors();
         UpdateMonitors();
     }
 
     public void UpdateMonitors()
     {
-        // UpdateMonitors could be called multiple times in a short time by windows event listeners
-        // Scanning monitors takes time, so wait for short time while calls come in, and only execute after short time has passed.
-        if (isUpdatingMonitors)
-        {
-            timer.Change(1000, Timeout.Infinite);
-        }
-        else
-        {
-            isUpdatingMonitors = true;
-            timer = new Timer(ExecuteUpdateMonitors, null, 1000, Timeout.Infinite);
-        }
+        // TODO limit calls to ExecuteUpdateMonitors. Make sure most recent call is performed, but queued are discarded
+        ExecuteUpdateMonitors();
     }
 
-    private void ExecuteUpdateMonitors(object? state)
+    private void ExecuteUpdateMonitors()
     {
-        Monitors.Scan();
-
-        isUpdatingMonitors = false;
-        timer.Dispose();
+        Monitors.Scan(_settingsService);
     }
 
-    public void SetBrightness(VirtualMonitor vm, PhysicalMonitor pm, int value)
+    public void SetBrightness(DdcMonitor monitor, int value)
     {
-        pm.SetBrightness((uint)value);
+        monitor.SetBrightness((uint)value);
     }
 
-    public void SetContrast(VirtualMonitor vm, PhysicalMonitor pm, int value)
-    { 
-        pm.SetContrast((uint)value);
+    public void SetContrast(DdcMonitor monitor, int value)
+    {
+        //monitor.SetContrast((uint)value);
     }
 
 }

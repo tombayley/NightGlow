@@ -1,4 +1,4 @@
-﻿namespace NightGlow.MonitorConfig;
+﻿namespace NightGlow.Models;
 
 public class Setting
 {
