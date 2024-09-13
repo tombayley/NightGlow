@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -147,43 +144,4 @@ public class SafePhysicalMonitorHandle : SafeHandle
     public static extern bool DestroyPhysicalMonitor(
         IntPtr hMonitor);
 
-}
-
-public enum AccessStatus
-{
-    None = 0,
-    Succeeded,
-    Failed,
-    DdcFailed,
-    TransmissionFailed,
-    NoLongerExist,
-    NotSupported
-}
-
-public class AccessResult
-{
-    public AccessStatus Status { get; }
-    public string Message { get; }
-
-    public AccessResult(AccessStatus status, string message) => (this.Status, this.Message) = (status, message);
-
-    public static readonly AccessResult Succeeded = new(AccessStatus.Succeeded, null);
-    public static readonly AccessResult Failed = new(AccessStatus.Failed, null);
-    public static readonly AccessResult NotSupported = new(AccessStatus.NotSupported, null);
-}
-
-public class ValueData
-{
-    public byte Value { get; }
-    public ReadOnlyCollection<byte> Values { get; }
-
-    public ValueData(byte value, IEnumerable<byte> values)
-    {
-        this.Value = value;
-
-        if (values is not null)
-        {
-            this.Values = Array.AsReadOnly(values.ToArray());
-        }
-    }
 }

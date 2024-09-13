@@ -10,7 +10,7 @@ public class DdcService
     public readonly Monitors _monitors;
 
     public Monitors Monitors { get => _monitors; }
-
+    
     public DdcService(SettingsService settingsService)
     {
         _settingsService = settingsService;
@@ -20,7 +20,6 @@ public class DdcService
 
     public void UpdateMonitors()
     {
-        // TODO limit calls to ExecuteUpdateMonitors. Make sure most recent call is performed, but queued are discarded
         ExecuteUpdateMonitors();
     }
 

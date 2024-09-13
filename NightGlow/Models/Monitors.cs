@@ -23,6 +23,9 @@ public class Monitors
 
     protected readonly object _monitorsLock = new();
 
+    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+    private CancellationTokenSource _cts = new CancellationTokenSource();
+
     public Monitors()
     {
         BindingOperations.EnableCollectionSynchronization(MonitorItems, _monitorsLock);
@@ -30,63 +33,87 @@ public class Monitors
 
     public Task Scan(SettingsService _settingsService) => ScanAsync(_settingsService);
 
-    public virtual async Task ScanAsync(SettingsService _settingsService)
+    private async Task ScanAsync(SettingsService _settingsService)
     {
-        // TODO reuse existing monitors instead of recreating all
-        await Task.Run(async () =>
+        var newCts = new CancellationTokenSource();
+
+        CancellationTokenSource prevCts = Interlocked.Exchange(ref _cts, newCts);
+        prevCts.Cancel();
+        prevCts.Dispose();
+
+        await _semaphore.WaitAsync();
+        try
         {
+            await Task.Run(async () =>
+            {
+                await ScanAsync(_settingsService, newCts.Token);
+            });
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+
+    private async Task ScanAsync(SettingsService settingsService, CancellationToken cts)
+    {
+        if (cts.IsCancellationRequested)
+            return;
+
+        lock (_monitorsLock)
+        {
+            foreach (var monitor in MonitorItems)
+            {
+                monitor.Dispose();
+            }
+            MonitorItems.Clear();
+        }
+
+        foreach (var ddcMonitor in await EnumerateMonitorsAsync())
+        {
+            if (cts.IsCancellationRequested)
+                return;
+
+            Debug.WriteLine($"{ddcMonitor.DisplayIndex}, {ddcMonitor.DeviceInstanceId}, {ddcMonitor.Description}");
+
+            DdcConfigMonitor ddcConfigMonitor = settingsService.DdcConfig.GetOrCreateDdcConfigMonitor(ddcMonitor);
+
+            var monitorVm = new MonitorViewModel(ddcMonitor)
+            {
+                Brightness = Convert.ToInt32(ddcMonitor.GetBrightness().Current),
+                EnableDdc = ddcConfigMonitor.EnableDdc,
+                MaxBrightness = ddcConfigMonitor.MaxBrightness,
+                MinBrightnessPct = ddcConfigMonitor.MinBrightnessPct,
+            };
+            monitorVm.BrightnessChangeEvent += (s, e) =>
+            {
+                ddcMonitor.SetBrightness((uint)e.Monitor.Brightness);
+            };
+            monitorVm.ContrastChangeEvent += (s, e) =>
+            {
+                //item.SetContrast(item, e.Monitor.Contrast);
+            };
+            monitorVm.EnableDdcChangeEvent += (s, e) =>
+            {
+                settingsService.DdcConfig.SetEnableDdc(ddcMonitor, e.Monitor.EnableDdc);
+                settingsService.SaveDdcConfig();
+            };
+            monitorVm.MinBrightnessPctChangeEvent += (s, e) =>
+            {
+                settingsService.DdcConfig.SetMinBrightnessPct(ddcMonitor, e.Monitor.MinBrightnessPct);
+                settingsService.SaveDdcConfig();
+            };
+            monitorVm.MaxBrightnessChangeEvent += (s, e) =>
+            {
+                settingsService.DdcConfig.SetMaxBrightness(ddcMonitor, e.Monitor.MaxBrightness);
+                settingsService.SaveDdcConfig();
+            };
+
             lock (_monitorsLock)
             {
-                foreach (var monitor in MonitorItems)
-                {
-                    monitor.Dispose();
-                }
-                MonitorItems.Clear();
+                MonitorItems.Add(monitorVm);
             }
-
-            foreach (var ddcMonitor in await EnumerateMonitorsAsync())
-            {
-                Debug.WriteLine($"{ddcMonitor.DisplayIndex}, {ddcMonitor.DeviceInstanceId}, {ddcMonitor.Description}");
-
-                DdcConfigMonitor ddcConfigMonitor = _settingsService.DdcConfig.GetOrCreateDdcConfigMonitor(ddcMonitor);
-
-                var monitorVm = new MonitorViewModel(ddcMonitor)
-                {
-                    Brightness = Convert.ToInt32(ddcMonitor.GetBrightness().Current),
-                    EnableDdc = ddcConfigMonitor.EnableDdc,
-                    MaxBrightness = ddcConfigMonitor.MaxBrightness,
-                    MinBrightnessPct = ddcConfigMonitor.MinBrightnessPct,
-                };
-                monitorVm.BrightnessChangeEvent += (s, e) =>
-                {
-                    ddcMonitor.SetBrightness((uint)e.Monitor.Brightness);
-                };
-                monitorVm.ContrastChangeEvent += (s, e) =>
-                {
-                    //item.SetContrast(item, e.Monitor.Contrast);
-                };
-                monitorVm.EnableDdcChangeEvent += (s, e) =>
-                {
-                    _settingsService.DdcConfig.SetEnableDdc(ddcMonitor, e.Monitor.EnableDdc);
-                    _settingsService.SaveDdcConfig();
-                };
-                monitorVm.MinBrightnessPctChangeEvent += (s, e) =>
-                {
-                    _settingsService.DdcConfig.SetMinBrightnessPct(ddcMonitor, e.Monitor.MinBrightnessPct);
-                    _settingsService.SaveDdcConfig();
-                };
-                monitorVm.MaxBrightnessChangeEvent += (s, e) =>
-                {
-                    _settingsService.DdcConfig.SetMaxBrightness(ddcMonitor, e.Monitor.MaxBrightness);
-                    _settingsService.SaveDdcConfig();
-                };
-
-                lock (_monitorsLock)
-                {
-                    MonitorItems.Add(monitorVm);
-                }
-            }
-        });
+        }
     }
 
     private static async Task<IEnumerable<DdcMonitor>> EnumerateMonitorsAsync(CancellationToken cancellationToken = default)
