@@ -1,6 +1,6 @@
 #define AppName "Night Glow"
 #define AppExe "NightGlow.exe"
-#define AppVersion "2.0.0"
+#define AppVersion "3.0.0"
 
 [Setup]
 AppId={{8B87A5F9-0C03-4B92-9080-DDCF75DC18A4}

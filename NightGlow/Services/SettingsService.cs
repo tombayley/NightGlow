@@ -37,6 +37,17 @@ public class SettingsService : ObservableObject, IDisposable
         set => _extendedGammaRange.Set = value;
     }
 
+    public bool ShowBrightTempPopup
+    {
+        get => Settings.Default.ShowBrightTempPopup;
+        set
+        {
+            Settings.Default.ShowBrightTempPopup = value;
+            Settings.Default.Save();
+            OnPropertyChanged(nameof(ShowBrightTempPopup));
+        }
+    }
+
     public bool FirstLaunch
     {
         get => Settings.Default.FirstLaunch;
@@ -182,7 +193,7 @@ public class SettingsService : ObservableObject, IDisposable
 
     public void LoadDdcConfig()
     {
-        string ddcConfigJson = Settings.Default.DdcConfigJson;
+        string ddcConfigJson = Settings.Default.DdcConfigJsonV2;
         try
         {
             DdcConfig = JsonConvert.DeserializeObject<DdcConfig>(ddcConfigJson) ?? new DdcConfig();
@@ -197,7 +208,7 @@ public class SettingsService : ObservableObject, IDisposable
     public void SaveDdcConfig()
     {
         string ddcConfigJson = JsonConvert.SerializeObject(DdcConfig);
-        Settings.Default.DdcConfigJson = ddcConfigJson;
+        Settings.Default.DdcConfigJsonV2 = ddcConfigJson;
         Settings.Default.Save();
     }
 

@@ -1,4 +1,4 @@
-﻿using NightGlow.MonitorConfig;
+﻿using NightGlow.Models;
 using System;
 using System.Collections.Generic;
 
@@ -8,56 +8,56 @@ namespace NightGlow.Data;
 public class DdcConfig
 {
 
-    public IList<DdcMonitorItem> DdcMonitorItems;
+    public IList<DdcConfigMonitor> DdcConfigMonitorItems;
 
     public DdcConfig()
     {
-        DdcMonitorItems = new List<DdcMonitorItem>();
+        DdcConfigMonitorItems = new List<DdcConfigMonitor>();
     }
 
-    public DdcMonitorItem GetOrCreateDdcMonitorItem(VirtualMonitor vm)
+    public DdcConfigMonitor GetOrCreateDdcConfigMonitor(DdcMonitor monitor)
     {
-        foreach (var item in DdcMonitorItems)
-            if (item.Name.Equals(vm.FriendlyName) && item.DeviceName.Equals(vm.DeviceName))
+        foreach (var item in DdcConfigMonitorItems)
+            if (item.DeviceInstanceId.Equals(monitor.DeviceInstanceId))
                 return item;
 
-        DdcMonitorItem newItem = new DdcMonitorItem
+        DdcConfigMonitor newItem = new DdcConfigMonitor
         {
-            Name = vm.FriendlyName,
-            DeviceName = vm.DeviceName,
+            Description = monitor.Description,
+            DeviceInstanceId = monitor.DeviceInstanceId,
             EnableDdc = false,
             MinBrightnessPct = 0,
             MaxBrightness = 100
         };
-        DdcMonitorItems.Add(newItem);
+        DdcConfigMonitorItems.Add(newItem);
         return newItem;
     }
 
-    public void SetEnableDdc(VirtualMonitor vm, bool value)
+    public void SetEnableDdc(DdcMonitor monitor, bool value)
     {
-        DdcMonitorItem item = GetOrCreateDdcMonitorItem(vm);
+        DdcConfigMonitor item = GetOrCreateDdcConfigMonitor(monitor);
         item.EnableDdc = value;
     }
 
-    public void SetMinBrightnessPct(VirtualMonitor vm, int value)
+    public void SetMinBrightnessPct(DdcMonitor monitor, int value)
     {
-        DdcMonitorItem item = GetOrCreateDdcMonitorItem(vm);
+        DdcConfigMonitor item = GetOrCreateDdcConfigMonitor(monitor);
         item.MinBrightnessPct = value;
     }
 
-    public void SetMaxBrightness(VirtualMonitor vm, int value)
+    public void SetMaxBrightness(DdcMonitor monitor, int value)
     {
-        DdcMonitorItem item = GetOrCreateDdcMonitorItem(vm);
+        DdcConfigMonitor item = GetOrCreateDdcConfigMonitor(monitor);
         item.MaxBrightness = value;
     }
 
 }
 
 [Serializable]
-public class DdcMonitorItem
+public class DdcConfigMonitor
 {
-    public string Name;
-    public string DeviceName;
+    public string Description;
+    public string DeviceInstanceId;
 
     public bool EnableDdc;
 

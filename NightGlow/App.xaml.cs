@@ -46,7 +46,9 @@ public partial class App : Application
 
         services.AddSingleton<NotifyIconViewModel>();
         services.AddSingleton<MainWindowViewModel>();
+        services.AddSingleton<PopupViewModel>();
 
+        services.AddSingleton<PopupWindow>();
         services.AddTransient<MainWindow>();
     }
 

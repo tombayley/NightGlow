@@ -26,6 +26,13 @@
             Margin="0,0,0,10"
             />
 
+        <CheckBox
+            materialDesign:CheckBoxAssist.CheckBoxSize="20"
+            Content="Show popup on brightness / temperature change"
+            IsChecked="{Binding SettingsService.ShowBrightTempPopup, Mode=TwoWay}"
+            Margin="0,0,0,10"
+            />
+
     </StackPanel>
     
 </UserControl>

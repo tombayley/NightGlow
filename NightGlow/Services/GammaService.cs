@@ -111,32 +111,6 @@ public partial class GammaService : IDisposable
         //Debug.WriteLine($"Updated gamma to {configuration}.");
     }
 
-    //public void SetAllGamma(ColorConfiguration configuration)
-    //{
-    //    // Avoid unnecessary changes as updating too often will cause stutters
-    //    if (!IsGammaStale() && !IsSignificantChange(configuration))
-    //        return;
-
-    //    EnsureValidDeviceContexts();
-
-    //    _isUpdatingGamma = true;
-
-    //    foreach (var deviceContext in _deviceContexts)
-    //    {
-    //        deviceContext.SetGamma(
-    //            GetRed(configuration) * configuration.Brightness,
-    //            GetGreen(configuration) * configuration.Brightness,
-    //            GetBlue(configuration) * configuration.Brightness
-    //        );
-    //    }
-
-    //    _isUpdatingGamma = false;
-
-    //    _lastConfiguration = configuration;
-    //    _lastUpdateTimestamp = DateTimeOffset.Now;
-    //    Debug.WriteLine($"Updated gamma to {configuration}.");
-    //}
-
     public void Dispose()
     {
         // Reset gamma on all contexts

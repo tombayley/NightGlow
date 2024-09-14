@@ -8,10 +8,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 7.0.x
 
@@ -27,10 +27,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 7.0.x
 
@@ -48,13 +48,13 @@ jobs:
           & "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" Installer/Installer.iss
 
       - name: Upload artifacts (portable)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: NightGlow-Portable
           path: NightGlow/bin/publish/
 
       - name: Upload artifacts (installer)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: NightGlow-Installer
           path: Installer/bin/NightGlow-Installer.exe
@@ -67,13 +67,13 @@ jobs:
 
     steps:
       - name: Download artifacts (portable)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: NightGlow-Portable
           path: NightGlow
 
       - name: Download artifacts (installer)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: NightGlow-Installer
 

@@ -86,7 +86,7 @@
             </DockPanel>
 
             <ItemsControl
-                ItemsSource="{Binding MonitorItems}"
+                ItemsSource="{Binding DdcService.Monitors.MonitorItems}"
                 HorizontalContentAlignment="Stretch"
                 Margin="0,6,0,0"
                 >
